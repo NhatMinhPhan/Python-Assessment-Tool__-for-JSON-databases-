@@ -14,6 +14,7 @@ def after_successful_import(func):
         return func(*args, **kwargs)
     return wrapper
 
+# @test_case decorator
 def test_case(func): # All test case functions must return either a bool or a str
     def wrapper(*args, **kwargs):
         test_case_result = func(*args, **kwargs)
