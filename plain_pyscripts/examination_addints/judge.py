@@ -34,7 +34,6 @@ def test_case(func):
         return test_case_result
     return wrapper
 
-
 @after_successful_import
 def run() -> bool:
     """
@@ -45,7 +44,6 @@ def run() -> bool:
         False otherwise
     """
     results: List[bool] = []
-    # Add custom code for response.py here
 
     # Since test case functions return either a bool or a str,
     # append boolean values corresponding to if they return True to results
@@ -54,6 +52,7 @@ def run() -> bool:
     results.append(test_case_3() == True)
     results.append(test_case_4() == True)
     results.append(test_case_5() == True)
+    results.append(test_case_6() == True)
     
     test_ok: bool = False not in results
     if test_ok:
@@ -199,6 +198,34 @@ def test_case_5() -> Union[bool, str]:
     else:
         message = 'add_ints(50, 25, \'string\') expects an exception, but didn\'t get one.'
         return message
+
+@test_case
+def test_case_6() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import add_ints
+
+    expected = 1
+    try:
+        result = add_ints(-5, -10, 16)
+    except Exception as e:
+        message = f'add_ints(-5, -10, 16) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+    
+    if expected != result:
+        message = f'add_ints(-5, -10, 16) expects {expected}, but got {result}'
+        return message
+    return True
 
 ##########################################################
 

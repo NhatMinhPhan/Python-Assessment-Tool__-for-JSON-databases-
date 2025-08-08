@@ -7,6 +7,15 @@ def add_ints(*args: int) -> int:
 
     Returns:
         an integer sum of all passed integer arguments
+    
+    >>> add_ints(5, 5)
+    10
+    >>> add_ints(6, -9)
+    -3
+    >>> add_ints(100, False)
+    Traceback (most recent call last):
+    ...
+    AssertionError: Argument False is not integer
     """
     sum = 0
     for arg in args:
