@@ -7,6 +7,9 @@ import_failed = True
 
 # @after_successful_import decorator
 def after_successful_import(func):
+    """
+    Functions with this decorator can only run after successfully importing response.py.
+    """
     def wrapper(*args, **kwargs):
         if import_failed:
             print('Unable to proceed due to failed import of response.py')
@@ -15,7 +18,11 @@ def after_successful_import(func):
     return wrapper
 
 # @test_case decorator
-def test_case(func): # All test case functions must return either a bool or a str
+def test_case(func):
+    """
+    This decorator indicates that the function which it modifies is a test case.
+    All test case functions must return either a boolean or a string value.
+    """
     def wrapper(*args, **kwargs):
         test_case_result = func(*args, **kwargs)
         if isinstance(test_case_result, str): # Failed
@@ -53,7 +60,8 @@ def run() -> bool:
         print('TEST OK\n_______________________________________')
     else:
         fails = results.count(False) # when test_case() != True
-        print(f'Failed {fails}/{len(results)} cases.\n_______________________________________')
+        fail_percentage = round(fails/len(results)*100, 2)
+        print(f'Failed {fails}/{len(results)} cases ({fail_percentage}%).\n_______________________________________')
     return test_ok
 
 @test_case
@@ -76,7 +84,7 @@ def test_case_1() -> Union[bool, str]:
     try:
         result = add_ints(2, 3)
     except Exception as e:
-        message = f'add_ints(2, 3) expects a result, but got an exception: {e.capitalize()}'
+        message = f'add_ints(2, 3) expects a result, but got an exception: {str(e).capitalize()}'
         return message
 
     if expected != result:
@@ -104,7 +112,7 @@ def test_case_2() -> Union[bool, str]:
     try:
         result = add_ints(-5)
     except Exception as e:
-        message = f'add_ints(-5) expects a result, but got an exception: {e.capitalize()}'
+        message = f'add_ints(-5) expects a result, but got an exception: {str(e).capitalize()}'
         return message
     
     if expected != result:
@@ -132,7 +140,7 @@ def test_case_3() -> Union[bool, str]:
     try:
         result = add_ints(100, 2, 8, -8, -2)
     except Exception as e:
-        message = f'add_ints(100, 2, 8, -8, -2) expects a result, but got an exception: {e.capitalize()}'
+        message = f'add_ints(100, 2, 8, -8, -2) expects a result, but got an exception: {str(e).capitalize()}'
         return message
     
     if expected != result:
@@ -192,12 +200,38 @@ def test_case_5() -> Union[bool, str]:
         message = 'add_ints(50, 25, \'string\') expects an exception, but didn\'t get one.'
         return message
 
+##########################################################
+
 # Import response.py
 try:
     import response
+except SyntaxError as e:
+    print('JUDGE: Invalid syntax found in response.py')
+
+    # Get the name of e's type and eliminate "<class '" and "'>"
+    type_name = str(type(e))
+    type_name = type_name.replace('<class \'', '')
+    type_name = type_name.replace('\'>', '')
+
+    print(f'Details: <{type_name}> {e}')
+except ModuleNotFoundError as e:
+    print('JUDGE: response.py cannot be found')
+
+    # Get the name of e's type and eliminate "<class '" and "'>"
+    type_name = str(type(e))
+    type_name = type_name.replace('<class \'', '')
+    type_name = type_name.replace('\'>', '')
+
+    print(f'Details: <{type_name}> {e}')
 except Exception as e:
-    print(e)
-    print('JUDGE: response.py not found or unreadable')
+    print('JUDGE: There has been an exception while importing response.py')
+    
+    # Get the name of e's type and eliminate "<class '" and "'>"
+    type_name = str(type(e))
+    type_name = type_name.replace('<class \'', '')
+    type_name = type_name.replace('\'>', '')
+
+    print(f'Details: <{type_name}> {e}')
 else:
     import_failed = False
     print("JUDGE: Successfully found corresponding response.py!")

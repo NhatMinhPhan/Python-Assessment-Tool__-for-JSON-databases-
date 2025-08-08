@@ -14,7 +14,13 @@ def run_judge(subfolder_name: str) -> bool:
 
     # Run judge.py in the passed subfolder
     path_to_subfolder = f"{os.getcwd()}\\{subfolder_name}"
-    subprocess.run(["python", "judge.py"], cwd = path_to_subfolder, capture_output=False)
+    command = ["python", "judge.py"]
+    subprocess.run(
+        command,
+        cwd = path_to_subfolder,
+        capture_output=False
+    )
+
     print('__init__.py terminating...')
     pass
 
