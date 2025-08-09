@@ -62,6 +62,18 @@ def run() -> bool:
 
 @test_case
 def test_case_1() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
     pass
 
 ##########################################################
