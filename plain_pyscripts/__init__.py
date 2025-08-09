@@ -25,4 +25,4 @@ def run_judge(subfolder_name: str) -> bool:
     pass
 
 if __name__ == '__main__':
-    run_judge('plain_pyscripts\\examination_addints')
+    run_judge('plain_pyscripts\\examination_collections')
