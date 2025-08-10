@@ -58,6 +58,21 @@ def run() -> bool:
     results.append(test_case_9() == True)
     results.append(test_case_10() == True)
     results.append(test_case_11() == True)
+    results.append(test_case_12() == True)
+    results.append(test_case_13() == True)
+    results.append(test_case_14() == True)
+    results.append(test_case_15() == True)
+    results.append(test_case_16() == True)
+    results.append(test_case_17() == True)
+    results.append(test_case_18() == True)
+    results.append(test_case_19() == True)
+    results.append(test_case_20() == True)
+    results.append(test_case_21() == True)
+    results.append(test_case_22() == True)
+    results.append(test_case_23() == True)
+    results.append(test_case_24() == True)
+    results.append(test_case_25() == True)
+    results.append(test_case_26() == True)
     
     test_ok: bool = False not in results
     if test_ok:
@@ -280,7 +295,7 @@ def test_case_7() -> Union[bool, str]:
     except Exception as e:
         return True
     else:
-        message = f'descending_insertion_sort({collection}) expects an exception, but didn\'t get one.'
+        message = f'descending_insertion_sort({collection}) expects an exception, but didn\'t get one'
         return message
 
 # This test case examines if the code raises an exception - ascending_insertion_sort
@@ -309,7 +324,7 @@ def test_case_8() -> Union[bool, str]:
     except Exception as e:
         return True
     else:
-        message = f'ascending_insertion_sort({collection}) expects an exception, but didn\'t get one.'
+        message = f'ascending_insertion_sort({collection}) expects an exception, but didn\'t get one'
         return message
 
 # merge_in_ascending_order
@@ -407,6 +422,486 @@ def test_case_11() -> Union[bool, str]:
         message = f'merge_in_ascending_order({collection1}, {collection2}) expects {expected}, but got {result}'
         return message
     return True
+
+# merge_in_descending_order
+@test_case
+def test_case_12() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import merge_in_descending_order
+
+    collection1 = (1, 0, -1, -1)
+    collection2 = (3, 2, 1.1, 1, 0)
+    expected = (3, 2, 1.1, 1, 1, 0, 0, -1, -1)
+
+    try:
+        result = merge_in_descending_order(collection1, collection2)
+    except Exception as e:
+        message = f'merge_in_descending_order({collection1}, {collection2}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'merge_in_descending_order({collection1}, {collection2}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# merge_in_descending_order
+@test_case
+def test_case_13() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import merge_in_descending_order
+
+    collection1 = [1, 1, -100]
+    collection2 = (3, 2, 1.1, 1, 0)
+    expected = [3, 2, 1.1, 1, 1, 1, 0, -100]
+
+    try:
+        result = merge_in_descending_order(collection1, collection2)
+    except Exception as e:
+        message = f'merge_in_descending_order({collection1}, {collection2}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'merge_in_descending_order({collection1}, {collection2}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# This test case examines if the code raises an exception - merge_in_ascending_order
+@test_case
+def test_case_14() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import merge_in_ascending_order
+
+    collection1 = (1, (2, 3), 4, 5, 6)
+    collection2 = False
+
+    # Check if the code raises an exception
+
+    try:
+        result = merge_in_ascending_order(collection1, collection2)
+    except Exception as e:
+        return True
+    else:
+        message = f'merge_in_ascending_order({collection1}, {collection2}) expects an exception, but didn\'t get one (returned {result})'
+        return message
+
+# This test case examines if the code raises an exception - merge_in_descending_order
+@test_case
+def test_case_15() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import merge_in_descending_order
+
+    collection1 = (6, 5, 4, 2, 1)
+    collection2 = [4, False, 3, 1]
+
+    # Check if the code raises an exception
+
+    try:
+        result = merge_in_descending_order(collection1, collection2)
+    except Exception as e:
+        return True
+    else:
+        message = f'merge_in_descending_order({collection1}, {collection2}) expects an exception, but didn\'t get one (returned {result})'
+        return message
+
+# ascending_binary_search
+@test_case
+def test_case_16() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = (-1, 0, 0, 1, 1, 1.1, 2, 3)
+    x = 2
+    expected = 6
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except Exception as e:
+        message = f'ascending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'ascending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# ascending_binary_search
+@test_case
+def test_case_17() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = [-100, -95, -64, -31, -29, -0.03, 0, 1.2, 4.5, 8.8, 10, 10.9, 11, 58]
+    x = 1.2
+    expected = 7
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except Exception as e:
+        message = f'ascending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'ascending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# ascending_binary_search
+@test_case
+def test_case_18() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = (-100, -95, -64, -31, -29, -0.03, 0, 1.2, 4.5, 8.8, 10, 10.9, 11, 58)
+    x = 2
+    expected = -1
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except Exception as e:
+        message = f'ascending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'ascending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# ascending_binary_search
+@test_case
+def test_case_19() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = [-100, -95, -64, -31, -29, -0.03, 0, 1.2, 4.5, 8.8, 10, 10.9, 11, 58]
+    x = -28
+    expected = -1
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except Exception as e:
+        message = f'ascending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'ascending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# This test case examines if the code raises an exception - ascending_binary_search
+@test_case
+def test_case_20() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = [-100, -95, -64, -31, -29, -0.03, 0, 1.2, 4.5, 8.8, 10, 10.9, 11, 58]
+    x = False
+
+    # Check if the code raises an exception
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except Exception as e:
+        return True
+    else:
+        message = f'ascending_binary_search({x}, {collection}) expects an exception, but didn\'t get one'
+        return message
+
+# This test case examines if the code raises an exception - ascending_binary_search
+@test_case
+def test_case_21() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import ascending_binary_search
+
+    collection = {1, 2, 3, 5}
+    x = 5
+
+    # Check if the code raises an exception
+
+    try:
+        result = ascending_binary_search(x, collection)
+    except AssertionError as e:
+        return True
+    except Exception as e:
+        exception_type = str(e)
+        message = f'ascending_binary_search({x}, {collection}) expects the wrong exception ({exception_type})'
+        return message
+    else:
+        message = f'ascending_binary_search({x}, {collection}) expects an exception, but didn\'t get one'
+        return message
+
+# descending_binary_search
+@test_case
+def test_case_22() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import descending_binary_search
+
+    collection = (3, 2, 1.1, 1, 1, 0, 0, -1)
+    x = 2
+    expected = 1
+
+    try:
+        result = descending_binary_search(x, collection)
+    except Exception as e:
+        message = f'descending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'descending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# descending_binary_search
+@test_case
+def test_case_23() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import descending_binary_search
+
+    collection = [100, 5.5, 5.4, 5.3, 5, 4.9, 4.7, 3, 2.1111, 2.1, 2.09, 1, 0.1, -0.9, -1, -2.5, -10]
+    x = 1
+    expected = 11
+
+    try:
+        result = descending_binary_search(x, collection)
+    except Exception as e:
+        message = f'descending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'descending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# descending_binary_search
+@test_case
+def test_case_24() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import descending_binary_search
+
+    collection = (100, 5.5, 5.4, 5.3, 5, 4.9, 4.7, 3, 2.1111, 2.1, 2.09, 1, 0.1, -0.9, -1, -2.5, -10)
+    x = -10.5
+    expected = -1
+
+    try:
+        result = descending_binary_search(x, collection)
+    except Exception as e:
+        message = f'descending_binary_search({x}, {collection}) expects a result, but got an exception: {str(e).capitalize()}'
+        return message
+
+    if expected != result:
+        message = f'descending_binary_search({x}, {collection}) expects {expected}, but got {result}'
+        return message
+    return True
+
+# This test case examines if the code raises an exception - descending_binary_search
+@test_case
+def test_case_25() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import descending_binary_search
+
+    collection = {5,3,2,1}
+    x = 5
+
+    # Check if the code raises an exception
+
+    try:
+        result = descending_binary_search(x, collection)
+    except AssertionError as e:
+        return True
+    except Exception as e:
+        exception_type = str(e)
+        message = f'descending_binary_search({x}, {collection}) expects the wrong exception ({exception_type})'
+        return message
+    else:
+        message = f'descending_binary_search({x}, {collection}) expects an exception, but didn\'t get one'
+        return message
+    
+# This test case examines if the code raises an exception - descending_binary_search
+@test_case
+def test_case_26() -> Union[bool, str]:
+    """
+    Test case.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    from response import descending_binary_search
+
+    collection = (5,3,2,1)
+    x = True
+
+    # Check if the code raises an exception
+
+    try:
+        result = descending_binary_search(x, collection)
+    except AssertionError as e:
+        return True
+    except Exception as e:
+        exception_type = str(e)
+        message = f'descending_binary_search({x}, {collection}) expects the wrong exception ({exception_type})'
+        return message
+    else:
+        message = f'descending_binary_search({x}, {collection}) expects an exception, but didn\'t get one'
+        return message
 
 ##########################################################
 

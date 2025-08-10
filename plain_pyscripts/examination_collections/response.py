@@ -45,9 +45,9 @@ def merge_in_ascending_order(
     index2 = 0
     while index1 < len(collection1) or index2 < len(collection2):
         if index1 < len(collection1) and index2 < len(collection2):
-            assert isinstance(collection1[index1], int) or isinstance(collection1[index1], float), \
+            assert type(collection1[index1]) == int or type(collection1[index1]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection1[index1]})"
-            assert isinstance(collection2[index2], int) or isinstance(collection2[index2], float), \
+            assert type(collection2[index2]) == int or type(collection2[index2]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection2[index2]})"
             if collection1[index1] <= collection2[index2]:
                 merger.append(collection1[index1])
@@ -56,12 +56,12 @@ def merge_in_ascending_order(
                 merger.append(collection2[index2])
                 index2 += 1
         elif index1 < len(collection1):
-            assert isinstance(collection1[index1], int) or isinstance(collection1[index1], float), \
+            assert type(collection1[index1]) == int or type(collection1[index1]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection1[index1]})"
             merger.append(collection1[index1])
             index1 += 1
         elif index2 < len(collection2):
-            assert isinstance(collection2[index2], int) or isinstance(collection2[index2], float), \
+            assert type(collection2[index2]) == int or type(collection2[index2]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection2[index2]})"
             merger.append(collection2[index2])
             index2 += 1
@@ -115,23 +115,23 @@ def merge_in_descending_order(
     index2 = 0
     while index1 < len(collection1) or index2 < len(collection2):
         if index1 < len(collection1) and index2 < len(collection2):
-            assert isinstance(collection1[index1], int) or isinstance(collection1[index1], float), \
+            assert type(collection1[index1]) == int or type(collection1[index1]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection1[index1]})"
-            assert isinstance(collection2[index2], int) or isinstance(collection2[index2], float), \
+            assert type(collection2[index2]) == int or type(collection2[index2]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection2[index2]})"
-            if collection1[index1] <= collection2[index2]:
+            if collection1[index1] >= collection2[index2]:
                 merger.append(collection1[index1])
                 index1 += 1
             else:
                 merger.append(collection2[index2])
                 index2 += 1
         elif index1 < len(collection1):
-            assert isinstance(collection1[index1], int) or isinstance(collection1[index1], float), \
+            assert type(collection1[index1]) == int or type(collection1[index1]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection1[index1]})"
             merger.append(collection1[index1])
             index1 += 1
         elif index2 < len(collection2):
-            assert isinstance(collection2[index2], int) or isinstance(collection2[index2], float), \
+            assert type(collection2[index2]) == int or type(collection2[index2]) == float, \
                 f"There is an element in one of the collections which is not an int nor a float ({collection2[index2]})"
             merger.append(collection2[index2])
             index2 += 1
@@ -174,18 +174,18 @@ def ascending_insertion_sort(collection: Union[List[int | float], Tuple[int | fl
         return collection
     
     if len(collection) == 1:
-        assert isinstance(collection[0], int) or isinstance(collection[0], float), \
+        assert type(collection[0]) == int or type(collection[0]) == float, \
             f"{collection[0]} is a non-numeric value in the passed collection"
         return collection
     
     copy = list(collection).copy()
 
-    assert isinstance(copy[0], int) or isinstance(copy[0], float), \
+    assert type(copy[0]) == int or type(copy[0]) == float, \
         f"{copy[0]} is a non-numeric value in the passed collection"
 
     # Insertion sort
     for i in range(1, len(copy)):
-        assert isinstance(copy[i], int) or isinstance(copy[i], float), \
+        assert type(copy[i]) == int or type(copy[i]) == float, \
             f"{copy[i]} is a non-numeric value in the passed collection"
         
         temp = copy[i]
@@ -234,18 +234,18 @@ def descending_insertion_sort(collection: Union[List[int | float], Tuple[int | f
         return collection
     
     if len(collection) == 1:
-        assert isinstance(collection[0], int) or isinstance(collection[0], float), \
+        assert type(collection[0]) == int or type(collection[0]) == float, \
             f"{collection[0]} is a non-numeric value in the passed collection"
         return collection
     
     copy = list(collection).copy()
 
-    assert isinstance(copy[-1], int) or isinstance(copy[-1], float), \
+    assert type(copy[-1]) == int or type(copy[-1]) == float, \
         f"{copy[-1]} is a non-numeric value in the passed collection"
 
     # Insertion sort
     for i in range(-2, -len(copy)-1, -1):
-        assert isinstance(copy[i], int) or isinstance(copy[i], float), \
+        assert type(copy[i]) == int or type(copy[i]) == float, \
             f"{copy[i]} is a non-numeric value in the passed collection"
         
         temp = copy[i]
@@ -272,20 +272,20 @@ def ascending_binary_search(x: int | float, collection: Union[List[int | float],
         the index of x in collection, which is already sorted in ascending order.
         -1 if x cannot be found in collection.
     """
-    assert isinstance(x, int) or isinstance(x, float), f"x ({x}) is not an int or a float"
+    assert type(x) == int or type(x) == float, f"x ({x}) is not an int or a float"
     assert isinstance(collection, list) or isinstance(collection, tuple), \
         "collection is not a list nor a tuple"
     
     min = 0
     max = len(collection) - 1
     while (min <= max):
-        assert isinstance(collection[min], int) or isinstance(collection[min], float), \
+        assert type(collection[min]) == int or type(collection[min]) == float, \
             f"There is a non-numeric element in collection, which is {collection[min]}"
-        assert isinstance(collection[max], int) or isinstance(collection[max], float), \
-            f"There is a non-numeric element in collection, which is {collection[min]}"
+        assert type(collection[max]) == int or type(collection[max]) == float, \
+            f"There is a non-numeric element in collection, which is {collection[max]}"
         mid = (min + max) // 2
-        assert isinstance(collection[mid], int) or isinstance(collection[mid], float), \
-            f"There is a non-numeric element in collection, which is {collection[min]}"
+        assert type(collection[mid]) == int or type(collection[mid]) == float, \
+            f"There is a non-numeric element in collection, which is {collection[mid]}"
         if (collection[mid] == x):
             return mid
         elif (x < collection[mid]):
@@ -306,20 +306,20 @@ def descending_binary_search(x: int | float, collection: Union[List[int | float]
         the index of x in collection, which is already sorted in descending order.
         -1 if x cannot be found in collection.
     """
-    assert isinstance(x, int) or isinstance(x, float), f"x ({x}) is not an int or a float"
+    assert type(x) == int or type(x) == float, f"x ({x}) is not an int or a float"
     assert isinstance(collection, list) or isinstance(collection, tuple), \
         "collection is not a list nor a tuple"
     
     min = 0
     max = len(collection) - 1
     while (min <= max):
-        assert isinstance(collection[min], int) or isinstance(collection[min], float), \
+        assert type(collection[min]) == int or type(collection[min]) == float, \
             f"There is a non-numeric element in collection, which is {collection[min]}"
-        assert isinstance(collection[max], int) or isinstance(collection[max], float), \
-            f"There is a non-numeric element in collection, which is {collection[min]}"
+        assert type(collection[max]) == int or type(collection[max]) == float, \
+            f"There is a non-numeric element in collection, which is {collection[max]}"
         mid = (min + max) // 2
-        assert isinstance(collection[mid], int) or isinstance(collection[mid], float), \
-            f"There is a non-numeric element in collection, which is {collection[min]}"
+        assert type(collection[mid]) == int or type(collection[mid]) == float, \
+            f"There is a non-numeric element in collection, which is {collection[mid]}"
         if (collection[mid] == x):
             return mid
         elif (x > collection[mid]):
