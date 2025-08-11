@@ -75,7 +75,10 @@ def test_case_1() -> Union[bool, str]:
         String: error message if the test case fails.
 
     """
-    from response import Circle
+    try:
+        from response import Circle
+    except ImportError as e:
+        return (f'circle() = Circle() got an exception: {type(e)} {e}')
 
     circle = Circle()
 
@@ -103,7 +106,10 @@ def test_case_2() -> Union[bool, str]:
         String: error message if the test case fails.
 
     """
-    from response import Circle
+    try:
+        from response import Circle
+    except ImportError as e:
+        return (f'circle() = Circle() got an exception: {type(e)} {e}')
 
     circle = Circle(8)
 

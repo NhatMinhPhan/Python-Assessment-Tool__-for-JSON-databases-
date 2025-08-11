@@ -74,6 +74,10 @@ def test_case_1() -> Union[bool, str]:
         String: error message if the test case fails.
 
     """
+    # try:
+    #   from response import func_or_class
+    # except ImportError as e:
+    #   return (f'Import Error: {e}')
     pass
 
 ##########################################################
