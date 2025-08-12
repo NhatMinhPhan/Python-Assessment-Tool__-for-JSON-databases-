@@ -47,7 +47,7 @@ def run() -> bool:
 
     # Since test case functions return either a bool or a str,
     # append boolean values corresponding to if they return True to results
-    results.append(test_case_1() == True)
+    # results.append(test_case_1() == True)
     # results.append(test_case_2() == True)
     # results.append(test_case_3() == True)
     
@@ -61,9 +61,9 @@ def run() -> bool:
     return test_ok
 
 @test_case
-def test_case_1() -> Union[bool, str]:
+def test_case_output() -> Union[bool, str]:
     """
-    Test case.
+    Test case if response.py yields the correct output.
 
     Returns:
         A single boolean value if the test case passes.
@@ -78,6 +78,50 @@ def test_case_1() -> Union[bool, str]:
     #   from response import func_or_class
     # except ImportError as e:
     #   return (f'Import Error: {e}')
+
+    # example_var = 
+    # expected = 
+
+    # try:
+    #    result = func_or_class(example_var)
+    #except Exception as e:
+    #    message = f'func_or_class({example_var}) expects a result, but got an exception: {str(e).capitalize()}'
+    #    return message
+
+    # if expected != result:
+    #    message = f'func_or_class({example_var}) expects {expected}, but got {result}'
+    #    return message
+    #return True
+    pass
+
+@test_case
+def test_case_exception() -> Union[bool, str]:
+    """
+    Test case if response.py raises an exception, either general or particular.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    # try:
+    #   from response import func_or_class
+    # except ImportError as e:
+    #   return (f'Import Error: {e}')
+
+    # Check if the code raises an exception
+
+    # try:
+    #    result = func_or_class(example_var)
+    # except Exception as e:
+    #    return True
+    # else:
+    #    message = f'func_or_class({example_var}) expects an exception, but didn\'t get one'
+    #    return message
     pass
 
 ##########################################################
