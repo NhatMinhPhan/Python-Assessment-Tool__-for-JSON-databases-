@@ -31,6 +31,74 @@ class Shape(ABC):
         """
         pass
 
+class Circle(Shape):
+    """
+    A Circle is a Shape.
+    """
+
+    def __init__(self, radius: int | float = 5):
+        """
+        Instantiates a circle with a certain radius.
+
+        Parameters:
+            radius: The radius of this circle, set to 5 units by default
+        """
+        assert type(radius) == int or type(radius) == float, f'radius ({radius}) is not an int nor float'
+        self.radius = radius
+    
+    def get_radius(self, rounding: int = 0):
+        """
+        This getter method returns the radius of this circle, which can be rounded to a certain number of decimal digits.
+
+        Parameters:
+            rounding: The number of rounded decimal digits. If rounding <= 0, the returned value will not be rounded.
+
+        Returns:
+            the radius of this circle
+        """
+        assert type(rounding) == int, f'rounding ({rounding}) is not an int'
+        # If rounding <= 0, do not round.
+        if rounding <= 0:
+            return self.radius
+        return round(self.radius, rounding) # Round to {rounding} decimal digits
+
+
+    def perimeter(self, rounding: int = 0) -> float: # Circumference
+        """
+        Calculate the perimeter, or more properly the circumference, of this shape, which can be
+        rounded to a certain number of decimal digits.
+
+        Parameters:
+            rounding: The number of rounded decimal digits. If rounding <= 0, the returned value will not be rounded.
+
+        Returns:
+            the perimeter of this shape, rounded or not.
+        """
+        assert type(rounding) == int, f'rounding ({rounding}) is not an int'
+        diameter = self.radius * 2
+        perimeter = diameter * math.pi
+        # If rounding <= 0, do not round.
+        if rounding <= 0:
+            return perimeter
+        return round(perimeter, rounding) # Round to {rounding} decimal digits
+    
+    def area(self, rounding: int = 0) -> float:
+        assert type(rounding) == int, f'rounding ({rounding}) is not an int'
+        area = (self.radius ** 2) * math.pi
+        # If rounding <= 0, do not round.
+        if rounding <= 0:
+            return area
+        return round(area, rounding) # Round to {rounding} decimal digits
+    
+    def set_radius(self, radius: int | float):
+        """
+        Sets the radius of this circle.
+
+        Parameters:
+            radius: The radius of this circle
+        """
+        assert type(radius) == int or type(radius) == float, f'radius ({radius}) is not an int nor float'
+        self.radius = radius
     
 class Rectangle(Shape):
     """
