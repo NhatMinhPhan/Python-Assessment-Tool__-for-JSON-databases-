@@ -40,3 +40,34 @@
 .read-the-docs {
   color: #888;
 }
+
+#code-input {
+  resize: both;
+  font-family: "Consolas";
+  font-size: 15px;
+  width: 800px;
+  height: 400px;
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+#logout-button {
+  background-color: rgb(187, 0, 0);
+  color: white;
+  will-change: background-color, border-color;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+#logout-button:hover {
+  background-color: red;
+  border-color: black;
+}
+
+#code-submit {
+  will-change: background-color, border-color, color;
+  transition: border-color 0.25s, background-color 0.25s, color 0.25s;
+}
+#code-submit:hover {
+  background-color: green;
+  color: white;
+  border-color: black;
+}

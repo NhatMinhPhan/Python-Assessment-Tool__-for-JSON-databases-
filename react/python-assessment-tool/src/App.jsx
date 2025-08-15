@@ -1,25 +1,46 @@
 import { useState, useRef } from "react";
 import "./App.css";
 
+// importa.meta.env imports from an ".env.local" file, which is ignored by git.
+
 function App() {
   const [loggedIn, setLoggedIn] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
-  const totalNumberOfQuestions = 7;
+  const TOTAL_NUMBER_OF_QUESTIONS = Number.parseInt(
+    import.meta.env.VITE_TOTAL_QUESTIONS
+  );
+  const USER_ID = Number.parseInt(import.meta.env.VITE_USER_ID);
 
-  const arrOfAnswers = useRef(new Array(totalNumberOfQuestions)); // Array storing answers for each question
+  const arrOfAnswers = useRef(new Array(TOTAL_NUMBER_OF_QUESTIONS)); // Array storing answers for each question
+
+  const updateCurrentAnswer = () => {
+    const copy = arrOfAnswers.current.slice();
+    copy[questionNumber] = document.getElementById("code-input").value;
+    arrOfAnswers.current = copy;
+  };
 
   const submitAnswers = () => {
-    fetch(window.location.href, {
-      method: "POST",
+    updateCurrentAnswer();
+    const submission = {};
+    submission["answers"] = arrOfAnswers.current;
+    submission["id"] = USER_ID + ""; // id must be a string
+
+    const requestOptions = {
+      method: "PUT",
       headers: {
-        Accept: "application/json",
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(arrOfAnswers.current),
-    })
+      body: JSON.stringify(submission),
+    };
+
+    fetch(
+      import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT + USER_ID,
+      requestOptions
+    )
       .then((response) => response.json())
       .then((json) => console.log(json));
+    // Submit to USER_ID, which must be added to the database after registration.
   };
 
   const submitButtonMethod = (boolean) => {
@@ -31,13 +52,6 @@ function App() {
       if (boolean === true) submitAnswers();
       setHasSubmitted(boolean);
     }
-  };
-
-  const updateCurrentAnswer = () => {
-    const copy = arrOfAnswers.current.slice();
-    copy[questionNumber] = document.getElementById("code-input").value;
-    arrOfAnswers.current = copy;
-    console.log(arrOfAnswers.current);
   };
 
   const previousQuestion = () => {
@@ -53,7 +67,7 @@ function App() {
   };
 
   const nextQuestion = () => {
-    if (questionNumber >= totalNumberOfQuestions - 1) return;
+    if (questionNumber >= TOTAL_NUMBER_OF_QUESTIONS - 1) return;
 
     updateCurrentAnswer();
     if (arrOfAnswers.current[questionNumber + 1] === undefined)
@@ -66,9 +80,13 @@ function App() {
 
   return (
     <div>
+      <button type="button" id="logout-button">
+        Log out
+      </button>
+
       {!hasSubmitted ? (
         <h2>
-          Question {questionNumber + 1}/{totalNumberOfQuestions}
+          Question {questionNumber + 1}/{TOTAL_NUMBER_OF_QUESTIONS}
         </h2>
       ) : null}
 
