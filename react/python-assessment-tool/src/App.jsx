@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import CodeForm from "./components/CodeForm";
 import "./App.css";
 
 // importa.meta.env imports from an ".env.local" file, which is ignored by git.
@@ -10,6 +11,7 @@ function App() {
   const TOTAL_NUMBER_OF_QUESTIONS = Number.parseInt(
     import.meta.env.VITE_TOTAL_QUESTIONS
   );
+  const USER_NAME = import.meta.env.VITE_USER_NAME;
   const USER_ID = Number.parseInt(import.meta.env.VITE_USER_ID);
 
   const arrOfAnswers = useRef(new Array(TOTAL_NUMBER_OF_QUESTIONS)); // Array storing answers for each question
@@ -21,7 +23,7 @@ function App() {
   };
 
   const submitAnswers = () => {
-    updateCurrentAnswer();
+    updateCurrentAnswer(); // updates the answer for the question the user is currently on
     const submission = {};
     submission["answers"] = arrOfAnswers.current;
     submission["id"] = USER_ID + ""; // id must be a string
@@ -78,13 +80,27 @@ function App() {
     setQuestionNumber(questionNumber + 1);
   };
 
+  const logout = () => {
+    setLoggedIn(false);
+  };
+
   return (
     <div>
-      <button type="button" id="logout-button">
-        Log out
-      </button>
+      {loggedIn ? (
+        <div>
+          <p id="user-id">
+            User name: {USER_NAME} - User ID: {USER_ID}
+            <br></br>
+            Do not share the information above due to its confidential nature.
+          </p>
+          <button type="button" id="logout-button" onClick={() => logout()}>
+            Log out
+          </button>
+          <hr id="logout-hr"></hr>
+        </div>
+      ) : null}
 
-      {!hasSubmitted ? (
+      {!hasSubmitted && loggedIn ? (
         <h2>
           Question {questionNumber + 1}/{TOTAL_NUMBER_OF_QUESTIONS}
         </h2>
@@ -98,7 +114,7 @@ function App() {
         <p>You must log into your account first to access the form.</p>
       )}
 
-      {!hasSubmitted ? (
+      {!hasSubmitted && loggedIn ? (
         <div>
           <button
             type="button"
@@ -118,28 +134,6 @@ function App() {
         </div>
       ) : null}
     </div>
-  );
-}
-
-function CodeForm({ submitButtonMethod }) {
-  return (
-    <form>
-      <label htmlFor="code-input">Copy and paste your Python code below:</label>
-      <br></br>
-      <textarea name="code" id="code-input"></textarea>
-      <br></br>
-      <button
-        type="button"
-        id="code-submit"
-        onClick={() => submitButtonMethod(true)}
-      >
-        Finalize and Submit All
-      </button>
-      <br></br>
-      <label htmlFor="code-submit">
-        You will not be able to edit your code after submission.
-      </label>
-    </form>
   );
 }
 

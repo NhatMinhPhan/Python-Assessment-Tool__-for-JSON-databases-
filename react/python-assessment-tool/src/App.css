@@ -54,6 +54,7 @@
 #logout-button {
   background-color: rgb(187, 0, 0);
   color: white;
+  margin-bottom: 0.5px;
   will-change: background-color, border-color;
   transition: border-color 0.25s, background-color 0.25s;
 }
@@ -70,4 +71,13 @@
   background-color: green;
   color: white;
   border-color: black;
+}
+
+#user-id {
+  margin-bottom: 1px;
+  font-style: italic;
+}
+
+#logout-hr {
+  margin-top: 20px;
 }
