@@ -134,6 +134,9 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
             User name: {USER_NAME} - User ID: {USER_ID}
             <br></br>
             Do not share the information above due to its confidential nature.
+            <br></br>
+            In addition, do not close or refresh this tab as your session and
+            progress will not be saved.
           </p>
           <button type="button" id="logout-button" onClick={() => logout()}>
             Log out
