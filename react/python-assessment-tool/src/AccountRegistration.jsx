@@ -1,7 +1,16 @@
+import { useRef } from "react";
 import Authentication from "./components/Authentication";
+import { useNavigate, Link } from "react-router";
 
 export default function AccountRegistration() {
+  const loginLink = useRef();
+  // For automatic redirect to the LOGIN page:
+  let navigate = useNavigate();
+
   const submitAction = (username, password) => {
+    // Remove the link to the LOGIN page
+    loginLink.current.remove();
+
     // Submit the login data
     const submission = {};
     submission["username"] = username;
@@ -32,7 +41,10 @@ export default function AccountRegistration() {
           requestOptsForAnswers
         )
           .then((response) => response.json())
-          .then((json) => console.log(json));
+          .then((json) => {
+            console.log(json);
+            navigate("/login");
+          });
       });
   };
 
@@ -42,6 +54,9 @@ export default function AccountRegistration() {
         purposeOfAuthentication="register"
         submitAction={submitAction}
       />
+      <Link to="/login" ref={loginLink}>
+        Login
+      </Link>
     </div>
   );
 }

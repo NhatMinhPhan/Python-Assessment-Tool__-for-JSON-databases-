@@ -1,18 +1,54 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router";
 import CodeForm from "./components/CodeForm";
 import "./App.css";
 
 // importa.meta.env imports from an ".env.local" file, which is ignored by git.
 
-function App() {
+function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const [loggedIn, setLoggedIn] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
   const TOTAL_NUMBER_OF_QUESTIONS = Number.parseInt(
     import.meta.env.VITE_TOTAL_QUESTIONS
   );
-  const USER_NAME = import.meta.env.VITE_USER_NAME;
-  const USER_ID = Number.parseInt(import.meta.env.VITE_USER_ID);
+  // const USER_NAME = import.meta.env.VITE_USER_NAME;
+  // const USER_ID = Number.parseInt(import.meta.env.VITE_USER_ID);
+  const USER_NAME = getSessionUsername();
+  const USER_ID = getSessionUserId();
+
+  // For navigation with React Router:
+  let navigation = useNavigate();
+
+  useEffect(() => {
+    // Upon mount, if the user hasn't logged in, redirect to the LOGIN page
+    console.log(USER_NAME);
+    console.log(USER_ID);
+    if (USER_NAME === "" || USER_ID === "") navigation("/login");
+
+    // Check if the user has already submitted their answers. If they have, setHasSubmitted(true).
+    fetch(import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT)
+      .then((response) => response.json())
+      .then((all_users_answers) => {
+        const user_entry = all_users_answers.find(
+          (element) => element["id"] === USER_ID
+        ); // Finds the first instance with the passed userID argument
+
+        // If this entry has the property "answers" and that property stores an array
+        if (
+          Object.hasOwn(user_entry, "answers") &&
+          Array.isArray(user_entry["answers"])
+        ) {
+          // That means the user has already made a submission.
+          setHasSubmitted(true);
+        }
+      });
+
+    // Cleanup function to be returned
+    return () => {
+      console.log("The user hasn't logged in.");
+    };
+  }, []); // Empty dependency array ensures it runs only once on mount
 
   const arrOfAnswers = useRef(new Array(TOTAL_NUMBER_OF_QUESTIONS)); // Array storing answers for each question
 
@@ -51,7 +87,11 @@ function App() {
       "The passed argument for boolean in submitButtonMethod is not a boolean"
     );
     if (boolean === true || boolean === false) {
-      if (boolean === true) submitAnswers();
+      if (boolean === true) {
+        submitAnswers();
+        // clearLoginSession(); // Passed as an argument from main.jsx
+        // navigation("/login");
+      }
       setHasSubmitted(boolean);
     }
   };
@@ -82,6 +122,8 @@ function App() {
 
   const logout = () => {
     setLoggedIn(false);
+    clearLoginSession(); // Passed as an argument from main.jsx
+    navigation("/login");
   };
 
   return (

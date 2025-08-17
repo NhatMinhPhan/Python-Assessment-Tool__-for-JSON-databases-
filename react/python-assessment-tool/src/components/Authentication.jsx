@@ -19,14 +19,14 @@ export default function Authentication({
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    // User names must be at least 8 letters long
+    // Usernames must be at least 8 letters long
     if (username === undefined || username === null || username.length < 8) {
       setShowError(true);
       if (purposeOfAuthentication.toLowerCase().trim() == "register")
         // Register
-        setErrorMessage("Your user name must be at least 8 letters long.");
+        setErrorMessage("Your username must be at least 8 letters long.");
       // Login
-      else setErrorMessage("Invalid user name / password.");
+      else setErrorMessage("Invalid username / password.");
       setHasSubmitted(false);
 
       // Enable the input fields
@@ -42,7 +42,7 @@ export default function Authentication({
         // Register
         setErrorMessage("Your password must be at least 8 letters long.");
       // Login
-      else setErrorMessage("Invalid user name / password.");
+      else setErrorMessage("Invalid username / password.");
       setHasSubmitted(false);
 
       // Enable the input fields
@@ -51,12 +51,10 @@ export default function Authentication({
       return;
     }
 
-    // Check if user name already exists
+    // Check if username already exists
     fetch(import.meta.env.VITE_ACCOUNTS)
       .then((response) => response.json())
-      .then((json) => {
-        const accounts = json;
-
+      .then((accounts) => {
         // The following if-statement can only be run on the REGISTRATION page
         if (
           accounts.length > 0 &&
@@ -71,8 +69,31 @@ export default function Authentication({
           if (username_in_accounts) {
             setShowError(true);
             setErrorMessage(
-              "The user name you've chosen already exists! Please pick another one."
+              "The username you've chosen already exists! Please pick another one."
             );
+            setHasSubmitted(false);
+
+            // Enable the input fields
+            document.getElementById("username").disabled = false;
+            document.getElementById("password").disabled = false;
+            return;
+          }
+        }
+        // The following else-if-statement can only be run on the LOGIN page
+        else if (
+          accounts.length > 0 &&
+          purposeOfAuthentication.toLowerCase().trim() == "login"
+        ) {
+          const user_found = accounts.find(
+            (element) => element["username"] === username
+          ); // Finds the first instance satisfying this condition
+
+          if (
+            user_found === undefined || // Nonexistent user
+            (user_found !== undefined && user_found["password"] !== password) // Incorrect password
+          ) {
+            setShowError(true);
+            setErrorMessage("Invalid username / password.");
             setHasSubmitted(false);
 
             // Enable the input fields
@@ -92,13 +113,13 @@ export default function Authentication({
           purposeOfAuthentication.slice(1)}
       </h2>
       <form>
-        <label htmlFor="username">User Name:</label>
+        <label htmlFor="username">Username:</label>
         <br></br>
         <input type="text" name="username" id="username"></input>
         <br></br>
         <label htmlFor="password">Password:</label>
         <br></br>
-        <input type="text" name="password" id="password"></input>
+        <input type="password" name="password" id="password"></input>
         <br></br>
         {showError ? (
           <div>
