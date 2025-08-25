@@ -1,12 +1,51 @@
-# React + Vite
+This work-in-progress is created for experiential purposes and not for professional use.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Python Assessment Tool
 
-Currently, two official plugins are available:
+This tool aims to aid tutors in assessing their tutees' Python knowledge and skills currently with a JSON server, and is expected to implement a SQLite server in the near future.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+For this version, the tool is used as follows: The tutor sets up a JSON server with a .json file, an .env file, and a development server or server of another type to run the React code. Then, they need to generate a Localhost tunnel with for example [pinggy.io](https://pinggy.io/) to connect with the tutees.
 
-## Expanding the ESLint configuration
+## JSON Server
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Summary
+
+Create a db.json file in react/python-assessment-tool and follow this [link](https://www.npmjs.com/package/json-server) to install the json-server package.
+
+Subsequently, enter the following into the terminal: `json-server db.json`.
+
+**NOTE**: Currently, users' credentials (username, password) are **not** stored securely and privately. Operate with caution and care.
+
+### Structure
+
+Copy and paste the following block into db.json.
+
+```
+{
+    "accounts": [],
+    "user_answers": []
+}
+```
+
+## .env file
+
+The .env file must consist of the following (note that this project is developed with Vite, thereby resulting in the variables prefixed by "VITE"):
+
+`VITE_TOTAL_QUESTIONS`: Total number of questions to give the tutees
+`VITE_USER_NAME`: Placeholder username
+`VITE_USER_ID`: Placeholder user ID
+`VITE_ANSWER_SUBMISSION_ENDPOINT`: JSON server endpoint (or endpoint in a server of another type) that stores users' submissions of their code
+`VITE_ACCOUNTS`: JSON server endpoint (or endpoint in a server of another type) that stores users' credentials
+
+## Development server
+
+This section only discusses Vite which is used to work on this project.
+For other tools like Vite, please refer to their documentation.
+
+Remember to install dependencies included by package.json in react/python-assessment-tool.
+
+To run the development server and use Localhost, enter in the terminal: `yarn run dev` using Yarn or `npm run dev` using npm.
+
+## Localhost tunnel
+
+Tutors need to generate a Localhost tunnel with for example [pinggy.io](https://pinggy.io/) to connect with the tutees directly from localhost.
