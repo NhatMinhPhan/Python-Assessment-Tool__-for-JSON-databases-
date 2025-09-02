@@ -40,9 +40,9 @@ export default function AccountRegistration() {
           import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT,
           requestOptsForAnswers
         )
-          .then((response) => response.json())
-          .then((json) => {
-            console.log(json);
+          .then((response) => response.status)
+          .then((status) => {
+            console.log(status);
             navigate("/login");
           });
       });
