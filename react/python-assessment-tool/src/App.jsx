@@ -36,6 +36,8 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
 
         // If this entry has the property "answers" and that property stores an array
         if (
+          user_entry !== null &&
+          user_entry !== undefined &&
           Object.hasOwn(user_entry, "answers") &&
           Array.isArray(user_entry["answers"])
         ) {
@@ -46,7 +48,7 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
 
     // Cleanup function to be returned
     return () => {
-      console.log("The user hasn't logged in.");
+      console.log("The user hasn't logged in or has logged out.");
     };
   }, []); // Empty dependency array ensures it runs only once on mount
 
