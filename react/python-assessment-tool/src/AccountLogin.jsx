@@ -1,53 +1,65 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Authentication from "./components/Authentication";
 import { useNavigate, Link } from "react-router";
 
-export default function AccountLogin({ updateLoginSession }) {
+export default function AccountLogin({
+  updateLoginSession,
+  getSessionUsername,
+  getSessionUserId,
+}) {
   const registrationLink = useRef();
+  const [loginFailed, setLoginFailed] = useState(false); // Used when login fails (wrong password, etc.)
   let navigate = useNavigate();
 
-  const submitAction = (username, password) => {
-    registrationLink.current.remove();
+  useEffect(() => {
+    // Upon mount, if the user has already logged in, redirect to index.
+    const USER_NAME = getSessionUsername();
+    const USER_ID = getSessionUserId();
+    if (
+      USER_NAME !== "" &&
+      USER_ID !== "" &&
+      USER_NAME !== undefined &&
+      USER_ID !== undefined &&
+      USER_NAME !== null &&
+      USER_ID !== null
+    )
+      navigate("/");
+  }, []);
 
-    fetch(import.meta.env.VITE_ACCOUNTS)
-      .then((response) => response.json())
-      .then((accounts) => {
-        const user_found = accounts.find(
-          (element) => element["username"] === username
-        ); // Finds the first instance satisfying this condition (it surely exists)
-        updateLoginSession(username, user_found["id"]);
-        return user_found["id"];
-      })
-      .then((userID) => {
-        // Checks if there is a corresponding user_answers for this user with the user ID. If not, generate one.
-        fetch(import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT)
-          .then((response) => response.json())
-          .then((all_users_answers) => {
-            const user_answers_found = all_users_answers.find(
-              (element) => element["id"] === userID
-            ); // Finds the first instance with the passed userID argument
-            if (user_answers_found !== undefined) navigate("/"); // Entry exists
-            else {
-              // Generate an entry
-              const requestOptsForAnswers = {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id: userID }),
-              };
-              fetch(
-                import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT,
-                requestOptsForAnswers
-              )
-                .then((response) => response.status)
-                .then((status) => {
-                  console.log(status);
-                  navigate("/");
-                });
-            }
-          });
-      });
+  const submitAction = (username, password) => {
+    setLoginFailed(false);
+
+    // Submit the login data
+    const submission = {};
+    submission["username"] = username;
+    submission["password"] = password;
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submission),
+    };
+
+    fetch(import.meta.env.VITE_FLASK_LOGIN, requestOptions).then((response) => {
+      console.log(response.status);
+      if (response.status == 200) {
+        // Successful login
+        response.text().then((text) => {
+          // Remove the link to the REGISTRATION page
+          registrationLink.current.remove();
+
+          // The USER_ID is 2 indices away from ':'
+          const USER_ID = text.slice(text.indexOf(": ") + 2);
+          updateLoginSession(username, USER_ID);
+          navigate("/");
+        });
+      } else {
+        // Wrong password, etc.
+        setLoginFailed(true);
+      }
+    });
   };
 
   return (
@@ -55,6 +67,7 @@ export default function AccountLogin({ updateLoginSession }) {
       <Authentication
         purposeOfAuthentication="login"
         submitAction={submitAction}
+        loginFailed={loginFailed}
       />
       <Link to="/register" ref={registrationLink}>
         Register

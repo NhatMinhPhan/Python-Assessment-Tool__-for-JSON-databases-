@@ -1,11 +1,29 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Authentication from "./components/Authentication";
 import { useNavigate, Link } from "react-router";
 
-export default function AccountRegistration() {
+export default function AccountRegistration({
+  getSessionUsername,
+  getSessionUserId,
+}) {
   const loginLink = useRef();
   // For automatic redirect to the LOGIN page:
   let navigate = useNavigate();
+
+  useEffect(() => {
+    // Upon mount, if the user has already logged in, redirect to index.
+    const USER_NAME = getSessionUsername();
+    const USER_ID = getSessionUserId();
+    if (
+      USER_NAME !== "" &&
+      USER_ID !== "" &&
+      USER_NAME !== undefined &&
+      USER_ID !== undefined &&
+      USER_NAME !== null &&
+      USER_ID !== null
+    )
+      navigate("/");
+  }, []);
 
   const submitAction = (username, password) => {
     // Remove the link to the LOGIN page
@@ -24,28 +42,12 @@ export default function AccountRegistration() {
       body: JSON.stringify(submission),
     };
 
-    fetch(import.meta.env.VITE_ACCOUNTS, requestOptions)
-      .then((response) => response.json())
-      .then((json) => {
-        // After the successful POST response, get the "id" of the account and add a new entry to user_answers
-        const id = json["id"];
-        const requestOptsForAnswers = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: id }),
-        };
-        fetch(
-          import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT,
-          requestOptsForAnswers
-        )
-          .then((response) => response.status)
-          .then((status) => {
-            console.log(status);
-            navigate("/login");
-          });
-      });
+    fetch(import.meta.env.VITE_FLASK_REGISTER, requestOptions).then(
+      (response) => {
+        console.log(response.status);
+        if (response.status == 200) navigate("/login");
+      }
+    );
   };
 
   return (

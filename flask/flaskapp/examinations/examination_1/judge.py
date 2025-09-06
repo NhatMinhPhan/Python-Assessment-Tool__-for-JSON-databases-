@@ -42,6 +42,18 @@ def test_case(func):
         return test_case_result
     return wrapper
 
+def get_user_id() -> str:
+    """
+    Retrieves the user ID from the first line of response.py.
+
+    Returns:
+        A user ID string
+    """
+    with open('response.py', 'r') as file:
+        first_line = file.readline().strip()
+        # Remove the '# ID: '
+        return first_line[6:]
+
 @after_successful_import
 def run() -> bool:
     """
@@ -55,7 +67,7 @@ def run() -> bool:
 
     # Since test case functions return either a bool or a str,
     # append boolean values corresponding to if they return True to results
-    # results.append(test_case_1() == True)
+    results.append(test_case_1() == True)
     # results.append(test_case_2() == True)
     # results.append(test_case_3() == True)
     
@@ -76,10 +88,20 @@ def run() -> bool:
         GRADE = 100 - fail_percentage
         displayable_results.append(f'SCORE FOR THIS QUESTION: {GRADE}%')
     
-    # Regardless of the result, have the results ready to send to the database
-    from evaluationjson import append_judge_results
+    # Regardless of the result, send the results to the database.
 
-    append_judge_results(displayable_results)
+    import requests
+    import os
+    SENT_STRING : str = '\n'.join(displayable_results)
+    USER_ID = get_user_id()
+    ENDPOINT = f'{os.getenv('SUBMISSIONS_ENDPOINT')}{USER_ID}'
+    user_submission = requests.get(ENDPOINT)
+    assert user_submission.status_code == 200, 'Cannot fetch user_submission'
+    new_submission = user_submission.json()
+    new_submission['evaluation'].append(SENT_STRING)
+    print(f'The new submission: {new_submission}')
+    response = requests.put(ENDPOINT, json=new_submission)
+    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
     
     return test_ok
 
@@ -147,6 +169,40 @@ def test_case_exception() -> Union[bool, str]:
     #    return message
     pass
 
+@test_case
+def test_case_1() -> Union[bool, str]:
+    """
+    Test case if response.py yields the correct output.
+
+    Returns:
+        A single boolean value if the test case passes.
+        A string value if the test case fails.
+        Boolean:
+            True if the test case passes.
+            False if the test case fails.
+        String: error message if the test case fails.
+
+    """
+    try:
+      from response import double_the_int
+    except ImportError as e:
+      return (f'Import Error: {e}')
+
+    argument = 6
+    expected = 12
+
+    try:
+       result = double_the_int(argument)
+    except Exception as e:
+       message = f'double_the_int() expects a result, but got an exception: {str(e).capitalize()}'
+       return message
+
+    if expected != result:
+       message = f'double_the_int() expects {expected}, but got {result}'
+       return message
+    return True
+    pass
+
 ##########################################################
 
 # Import response.py
@@ -184,4 +240,6 @@ else:
     print("JUDGE: Successfully found corresponding response.py!")
     print('_______________________________________\nTEST CASES:')
     displayable_results.append('TEST CASES:')
+    import sys
+    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
     run()

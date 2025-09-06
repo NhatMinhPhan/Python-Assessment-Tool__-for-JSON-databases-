@@ -24,8 +24,9 @@ def create_app(test_config = None):
     except OSError: # Cannot make the directory since it already exists
         pass
     
-    #@app.route('/session')
-    #def 
+    # Enable Cross-Origin Resource Sharing (CORS)
+    from flask_cors import CORS
+    CORS(app=app)
     
     # URL rule for index
     app.add_url_rule('/', endpoint='index')
@@ -41,5 +42,8 @@ def create_app(test_config = None):
     app.cli.add_command(dbjson.create_new_database)
     app.cli.add_command(dbjson.reset_all_db)
     app.cli.add_command(dbjson.clear_all_answers)
-    
+
     return app
+
+# Remember to run the app with --no-reload
+# so the server doesn't reload when response.py changes

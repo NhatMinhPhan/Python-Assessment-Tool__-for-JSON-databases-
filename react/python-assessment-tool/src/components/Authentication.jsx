@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Authentication({
   purposeOfAuthentication,
   submitAction,
+  loginFailed,
 }) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [showError, setShowError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("PLACEHOLDER");
+
+  useEffect(() => {
+    // When used in the LOGIN page, if login fails (due to a wrong password, etc.)
+    if (
+      purposeOfAuthentication.toLowerCase().trim() === "login" &&
+      loginFailed === true
+    ) {
+      setErrorMessage("Invalid username / password.");
+      setHasSubmitted(false);
+
+      // Enable the input fields
+      document.getElementById("username").disabled = false;
+      document.getElementById("password").disabled = false;
+    }
+  });
 
   const submitInfo = () => {
     setShowError(false); // Hide the error message
@@ -52,58 +68,39 @@ export default function Authentication({
     }
 
     // Check if username already exists
-    fetch(import.meta.env.VITE_ACCOUNTS)
-      .then((response) => response.json())
-      .then((accounts) => {
-        // The following if-statement can only be run on the REGISTRATION page
-        if (
-          accounts.length > 0 &&
-          purposeOfAuthentication.toLowerCase().trim() == "register"
-        ) {
-          const username_already_used = (element) =>
-            element["username"] === username;
-
-          const username_in_accounts = accounts.some(username_already_used);
-          // By using "some", it checks if there exists at least 1 element that satisifies the requirement
-
-          if (username_in_accounts) {
+    switch (purposeOfAuthentication.toLowerCase().trim()) {
+      case "register":
+        fetch(
+          import.meta.env.VITE_FLASK_REGISTER_DUPLICATECHECK + username
+        ).then((response) => {
+          if (response.status !== 200) {
             setShowError(true);
             setErrorMessage(
               "The username you've chosen already exists! Please pick another one."
             );
             setHasSubmitted(false);
-
-            // Enable the input fields
             document.getElementById("username").disabled = false;
             document.getElementById("password").disabled = false;
             return;
-          }
-        }
-        // The following else-if-statement can only be run on the LOGIN page
-        else if (
-          accounts.length > 0 &&
-          purposeOfAuthentication.toLowerCase().trim() == "login"
-        ) {
-          const user_found = accounts.find(
-            (element) => element["username"] === username
-          ); // Finds the first instance satisfying this condition
+          } else submitAction(username, password);
+        });
+        break;
 
-          if (
-            user_found === undefined || // Nonexistent user
-            (user_found !== undefined && user_found["password"] !== password) // Incorrect password
-          ) {
-            setShowError(true);
-            setErrorMessage("Invalid username / password.");
-            setHasSubmitted(false);
-
-            // Enable the input fields
-            document.getElementById("username").disabled = false;
-            document.getElementById("password").disabled = false;
-            return;
+      case "login":
+        fetch(import.meta.env.VITE_FLASK_LOGIN_DUPLICATECHECK + username).then(
+          (response) => {
+            if (response.status !== 200) {
+              setShowError(true);
+              setErrorMessage("Invalid username / password.");
+              setHasSubmitted(false);
+              document.getElementById("username").disabled = false;
+              document.getElementById("password").disabled = false;
+              return;
+            } else submitAction(username, password);
           }
-        }
-        submitAction(username, password);
-      });
+        );
+        break;
+    }
   };
 
   return (
@@ -121,7 +118,9 @@ export default function Authentication({
         <br></br>
         <input type="password" name="password" id="password"></input>
         <br></br>
-        {showError ? (
+        {showError ||
+        (purposeOfAuthentication.toLowerCase().trim() === "login" &&
+          loginFailed === true) ? (
           <div>
             <p style={{ color: "red", marginBottom: "0px" }}>{errorMessage}</p>
             <br></br>

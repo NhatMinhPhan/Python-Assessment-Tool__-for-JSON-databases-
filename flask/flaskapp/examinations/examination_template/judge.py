@@ -54,7 +54,6 @@ def get_user_id() -> str:
         # Remove the '# ID: '
         return first_line[6:]
 
-
 @after_successful_import
 def run() -> bool:
     """
@@ -68,7 +67,7 @@ def run() -> bool:
 
     # Since test case functions return either a bool or a str,
     # append boolean values corresponding to if they return True to results
-    results.append(test_case_1() == True)
+    # results.append(test_case_1() == True)
     # results.append(test_case_2() == True)
     # results.append(test_case_3() == True)
     
@@ -100,9 +99,7 @@ def run() -> bool:
     assert user_submission.status_code == 200, 'Cannot fetch user_submission'
     new_submission = user_submission.json()
     new_submission['evaluation'].append(SENT_STRING)
-    print(f'The new submission: {new_submission}')
-    response = requests.put(ENDPOINT, json=new_submission)
-    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
+    requests.put(ENDPOINT, json=new_submission)
     
     return test_ok
 
@@ -170,39 +167,6 @@ def test_case_exception() -> Union[bool, str]:
     #    return message
     pass
 
-@test_case
-def test_case_1() -> Union[bool, str]:
-    """
-    Test case if response.py yields the correct output.
-
-    Returns:
-        A single boolean value if the test case passes.
-        A string value if the test case fails.
-        Boolean:
-            True if the test case passes.
-            False if the test case fails.
-        String: error message if the test case fails.
-
-    """
-    try:
-      from response import hello_world
-    except ImportError as e:
-      return (f'Import Error: {e}')
-
-    argument = None
-    expected = 'Hello World!'
-
-    try:
-       result = hello_world()
-    except Exception as e:
-       message = f'hello_world() expects a result, but got an exception: {str(e).capitalize()}'
-       return message
-
-    if expected != result:
-       message = f'hello_world() expects {expected}, but got {result}'
-       return message
-    return True
-    pass
 
 ##########################################################
 

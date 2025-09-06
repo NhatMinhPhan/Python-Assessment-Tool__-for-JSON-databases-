@@ -39,9 +39,23 @@ createRoot(document.getElementById("root")).render(
         />
         <Route
           path="login"
-          element={<AccountLogin updateLoginSession={updateSession} />}
+          element={
+            <AccountLogin
+              updateLoginSession={updateSession}
+              getSessionUsername={getSessionUsername}
+              getSessionUserId={getSessionUserId}
+            />
+          }
         />
-        <Route path="register" element={<AccountRegistration />} />
+        <Route
+          path="register"
+          element={
+            <AccountRegistration
+              getSessionUsername={getSessionUsername}
+              getSessionUserId={getSessionUserId}
+            />
+          }
+        />
         {/* Redirect any unmatched route (404) to the login page */}
         <Route path="*" element={<Navigate replace to="/login" />} />
       </Routes>

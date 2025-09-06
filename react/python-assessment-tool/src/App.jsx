@@ -18,33 +18,32 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const USER_ID = getSessionUserId();
 
   // For navigation with React Router:
-  let navigation = useNavigate();
+  let navigate = useNavigate();
 
   useEffect(() => {
     // Upon mount, if the user hasn't logged in, redirect to the LOGIN page
-    console.log(USER_NAME);
-    console.log(USER_ID);
-    if (USER_NAME === "" || USER_ID === "") navigation("/login");
-
-    // Check if the user has already submitted their answers. If they have, setHasSubmitted(true).
-    fetch(import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT)
-      .then((response) => response.json())
-      .then((all_users_answers) => {
-        const user_entry = all_users_answers.find(
-          (element) => element["id"] === USER_ID
-        ); // Finds the first instance with the passed userID argument
-
-        // If this entry has the property "answers" and that property stores an array
-        if (
-          user_entry !== null &&
-          user_entry !== undefined &&
-          Object.hasOwn(user_entry, "answers") &&
-          Array.isArray(user_entry["answers"])
-        ) {
-          // That means the user has already made a submission.
-          setHasSubmitted(true);
-        }
-      });
+    if (
+      USER_NAME === "" ||
+      USER_ID === "" ||
+      USER_NAME === undefined ||
+      USER_ID === undefined ||
+      USER_NAME === null ||
+      USER_ID === null
+    )
+      navigate("/login");
+    else {
+      // Fetch visibility information from the server,
+      // including if the user has already submitted their answers.
+      // If they have, setHasSubmitted(true).
+      fetch(import.meta.env.VITE_FLASK_EVAL_SET_VIEWABILITY + USER_ID)
+        .then((response) => response.json())
+        .then((visibilityInfo) => {
+          if (visibilityInfo["submitted"] === true) {
+            // User has made a submission
+            setHasSubmitted(true);
+          }
+        });
+    }
 
     // Cleanup function to be returned
     return () => {
@@ -63,6 +62,17 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const submitAnswers = () => {
     updateCurrentAnswer(); // updates the answer for the question the user is currently on
     const submission = {};
+
+    // Replace all null/undefined/non-string items in arrOfAnswers.current with the empty string ""
+    for (let i = 0; i < arrOfAnswers.current.length; i++) {
+      if (
+        arrOfAnswers.current[i] === null ||
+        arrOfAnswers.current[i] === undefined ||
+        typeof arrOfAnswers.current[i] !== "string"
+      )
+        arrOfAnswers.current[i] = "";
+    }
+
     submission["answers"] = arrOfAnswers.current;
     submission["id"] = USER_ID + ""; // id must be a string
 
@@ -74,10 +84,7 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
       body: JSON.stringify(submission),
     };
 
-    fetch(
-      import.meta.env.VITE_ANSWER_SUBMISSION_ENDPOINT + USER_ID,
-      requestOptions
-    )
+    fetch(import.meta.env.VITE_FLASK_EVAL_SUBMIT + USER_ID, requestOptions)
       .then((response) => response.json())
       .then((json) => console.log(json));
     // Submit to USER_ID, which must be added to the database after registration.
@@ -92,7 +99,7 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
       if (boolean === true) {
         submitAnswers();
         // clearLoginSession(); // Passed as an argument from main.jsx
-        // navigation("/login");
+        // navigate("/login");
       }
       setHasSubmitted(boolean);
     }
@@ -123,9 +130,13 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   };
 
   const logout = () => {
-    setLoggedIn(false);
-    clearLoginSession(); // Passed as an argument from main.jsx
-    navigation("/login");
+    fetch(import.meta.env.VITE_FLASK_LOGOUT).then((response) => {
+      if (response.status === 200) {
+        setLoggedIn(false);
+        clearLoginSession(); // Passed as an argument from main.jsx
+        navigate("/login");
+      }
+    });
   };
 
   return (
@@ -133,7 +144,7 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
       {loggedIn ? (
         <div>
           <p id="user-id">
-            User name: {USER_NAME} - User ID: {USER_ID}
+            Username: {USER_NAME} - User ID: {USER_ID}
             <br></br>
             Do not share the information above due to its confidential nature.
             <br></br>
