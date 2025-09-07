@@ -1,6 +1,6 @@
 from typing import Union, List
 
-# In each 'examination' folder, there are only 2 files: judge.py & response.py.
+# In each 'examination_<number>' folder, there are only 2 files: judge.py & response.py.
 # Find respective 'response.py' in this 'examination' folder
 
 import_failed = True
@@ -119,7 +119,9 @@ def run() -> bool:
     assert user_submission.status_code == 200, 'Cannot fetch user_submission'
     new_submission = user_submission.json()
     new_submission['evaluation'].append(SENT_STRING)
-    requests.put(ENDPOINT, json=new_submission)
+    print(f'The new submission: {new_submission}')
+    response = requests.put(ENDPOINT, json=new_submission)
+    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
     
     return test_ok
 
@@ -186,7 +188,6 @@ def test_case_exception() -> Union[bool, str]:
     #    message = f'func_or_class({example_var}) expects an exception, but didn\'t get one'
     #    return message
     pass
-
 
 ##########################################################
 

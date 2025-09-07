@@ -1,6 +1,6 @@
 from typing import Union, List
 
-# In each 'examination' folder, there are only 2 files: judge.py & response.py.
+# In each 'examination_<number>' folder, there are only 2 files: judge.py & response.py.
 # Find respective 'response.py' in this 'examination' folder
 
 import_failed = True
