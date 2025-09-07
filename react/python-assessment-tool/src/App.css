@@ -81,3 +81,19 @@
 #logout-hr {
   margin-top: 20px;
 }
+
+.eval-display {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%;
+  background-color: black;
+  color: white;
+  font-family: "Consolas";
+}
+
+#overall-average-text {
+  font-size: 20px;
+}

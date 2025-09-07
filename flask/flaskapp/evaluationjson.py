@@ -24,7 +24,20 @@ def put_into_database(answer_list: list, endpoint: str):
         abort(404, 'Evaluation failed.')
     pass
 
-#################### Evaluate Python, may implement later
+def censor_all_directories_in_list (list_arg: List[str]) -> List[str]:
+    """
+    Replaces all sensitive sections of all directories found in a list with an ellipsis (...).
+
+    Parameters:
+        list_arg (list[str]): A list of strings with potentially sensitive information
+
+    Returns:
+        A list of strings with all sensitive sections of all directories replaced with an ellipsis (...)
+    """
+    assert isinstance(list_arg, list), "list_arg is not a list"
+    assert all(isinstance(item, str) for item in list_arg), "There is a non-string element in list_arg."
+    import os
+    return [item.replace(os.getenv('CENSORED_DIRECTORY_SECTION'), ' ... ') for item in list_arg]
 
 def get_average_overall_score(id: str) -> float:
     """
@@ -112,9 +125,7 @@ def launch_evaluation(id: str, answer_list: List[str]) -> None:
 
         submit_average_overall_score(id)
     pass
-################# Implement later ######################
     
-
 bp = Blueprint('eval', __name__, url_prefix='/eval')
 
 @cross_origin # Enables CORS
@@ -136,7 +147,7 @@ def submit(id: str):
 @cross_origin # Enables CORS
 @bp.route('/view/<id>', methods=['GET'])
 # @login_required
-def determine_viewability(id: str) -> dict:
+def determine_viewability(id: str):
     '''
     Returns a dictionary of 2 entries indicating if the code should be viewable or not.
     Unused for now.
@@ -175,6 +186,51 @@ def determine_viewability(id: str) -> dict:
         import json
         response_body_json = json.dumps(response_body) # Converts dict to JSON
         
+        return Response(status=200, headers=cors_required_headers, response=response_body_json, content_type='application/json')
+    return Response(status=403, headers=cors_required_headers, response='Inaccessible')
+
+@cross_origin # Enables CORS
+@bp.route('/results/<id>', methods=['GET'])
+def get_evaluation_results(id: str):
+    if request.method == 'GET':
+        submission_json = requests.get(f'{os.getenv('SUBMISSIONS_ENDPOINT')}{id}').json()
+        if not submission_json:
+            return Response(status=500, headers=cors_required_headers, response='Inaccessible')
+        if 'evaluation' not in submission_json:
+            return Response(status=404, headers=cors_required_headers, response='\'evaluation\' not found.')
+        if 'overall-average' not in submission_json:
+            return Response(status=404, headers=cors_required_headers, response='\'overall-average\' not found.')
+        evaluation_text = submission_json['evaluation']
+        overall_average = submission_json['overall-average']
+        
+        # The last item in evaluation_text or 'evaluation' in the JSON is the overall average score.
+        evaluation_text.append(f'Your overall average score is: {overall_average}%')
+        evaluation_text = censor_all_directories_in_list(evaluation_text)
+        response_body = {
+            'evaluation': evaluation_text
+        }
+        
+        print(f'Evaluation_text: {evaluation_text}', type(evaluation_text))
+        import json
+        response_body_json = json.dumps(response_body)
+        return Response(status=200, headers=cors_required_headers, response=response_body_json, content_type='application/json')
+    return Response(status=403, headers=cors_required_headers, response='Inaccessible')
+
+@cross_origin
+@bp.route('/user-code/<id>', methods=['GET'])
+def view_user_code(id: str):
+    if request.method == 'GET':
+        submission_json = requests.get(f'{os.getenv('SUBMISSIONS_ENDPOINT')}{id}').json()
+        if not submission_json:
+            return Response(status=500, headers=cors_required_headers, response='Inaccessible')
+        if 'answers' not in submission_json:
+            return Response(status=404, headers=cors_required_headers, response='\'answers\' not found.')
+        submission = submission_json['answers']
+        response_body = {
+            'submission': submission
+        }
+        import json
+        response_body_json = json.dumps(response_body)
         return Response(status=200, headers=cors_required_headers, response=response_body_json, content_type='application/json')
     return Response(status=403, headers=cors_required_headers, response='Inaccessible')
 

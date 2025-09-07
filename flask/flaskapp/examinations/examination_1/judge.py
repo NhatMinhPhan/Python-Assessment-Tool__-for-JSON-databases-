@@ -54,6 +54,22 @@ def get_user_id() -> str:
         # Remove the '# ID: '
         return first_line[6:]
 
+def censor_all_directories_in_list (list_arg: List[str]) -> List[str]:
+    """
+    Replaces all sensitive sections of all directories found in a list with an ellipsis (...).
+
+    Parameters:
+        list_arg (list[str]): A list of strings with potentially sensitive information
+
+    Returns:
+        A list of strings with all sensitive sections of all directories replaced with an ellipsis (...)
+    """
+    assert isinstance(list_arg, list), "list_arg is not a list"
+    assert all(isinstance(item, str) for item in list_arg), "There is a non-string element in list_arg."
+    import os
+    print(f'Judge: {os.getenv('CENSORED_DIRECTORY_SECTION')}')
+    return [item.replace(os.getenv('CENSORED_DIRECTORY_SECTION'), ' ... ') for item in list_arg]
+
 @after_successful_import
 def run() -> bool:
     """
@@ -64,6 +80,7 @@ def run() -> bool:
         False otherwise
     """
     results: List[bool] = []
+    global displayable_results
 
     # Since test case functions return either a bool or a str,
     # append boolean values corresponding to if they return True to results
@@ -88,7 +105,10 @@ def run() -> bool:
         GRADE = 100 - fail_percentage
         displayable_results.append(f'SCORE FOR THIS QUESTION: {GRADE}%')
     
-    # Regardless of the result, send the results to the database.
+    # Censor all sensitive information in displayable_results
+    displayable_results = censor_all_directories_in_list(displayable_results)
+
+    # Send the results to the database.
 
     import requests
     import os
@@ -217,6 +237,27 @@ except SyntaxError as e:
     type_name = type_name.replace('\'>', '')
 
     print(f'Details: <{type_name}> {e}')
+    displayable_results.append('Invalid syntax found in response.py')
+    displayable_results.append(f'Details: <{type_name}> {e}')
+    displayable_results.append(f'SCORE FOR THIS QUESTION: 0%')
+    displayable_results = censor_all_directories_in_list(displayable_results)
+
+    # Submit to the database
+    import sys
+    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    import requests
+    import os
+    SENT_STRING : str = '\n'.join(displayable_results)
+    USER_ID = get_user_id()
+    ENDPOINT = f'{os.getenv('SUBMISSIONS_ENDPOINT')}{USER_ID}'
+    user_submission = requests.get(ENDPOINT)
+    assert user_submission.status_code == 200, 'Cannot fetch user_submission'
+    new_submission = user_submission.json()
+    new_submission['evaluation'].append(SENT_STRING)
+    print(f'The new submission: {new_submission}')
+    response = requests.put(ENDPOINT, json=new_submission)
+    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
+
 except ModuleNotFoundError as e:
     print('JUDGE: response.py cannot be found')
 
@@ -226,6 +267,26 @@ except ModuleNotFoundError as e:
     type_name = type_name.replace('\'>', '')
 
     print(f'Details: <{type_name}> {e}')
+    displayable_results.append('response.py cannot be found')
+    displayable_results.append(f'Details: <{type_name}> {e}')
+    displayable_results.append(f'SCORE FOR THIS QUESTION: 0%')
+    displayable_results = censor_all_directories_in_list(displayable_results)
+
+    # Submit to the database
+    import sys
+    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    import requests
+    import os
+    SENT_STRING : str = '\n'.join(displayable_results)
+    USER_ID = get_user_id()
+    ENDPOINT = f'{os.getenv('SUBMISSIONS_ENDPOINT')}{USER_ID}'
+    user_submission = requests.get(ENDPOINT)
+    assert user_submission.status_code == 200, 'Cannot fetch user_submission'
+    new_submission = user_submission.json()
+    new_submission['evaluation'].append(SENT_STRING)
+    print(f'The new submission: {new_submission}')
+    response = requests.put(ENDPOINT, json=new_submission)
+    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
 except Exception as e:
     print('JUDGE: There has been an exception while importing response.py')
     
@@ -235,6 +296,26 @@ except Exception as e:
     type_name = type_name.replace('\'>', '')
 
     print(f'Details: <{type_name}> {e}')
+    displayable_results.append('There has been an exception while importing response.py')
+    displayable_results.append(f'Details: <{type_name}> {e}')
+    displayable_results.append(f'SCORE FOR THIS QUESTION: 0%')
+    displayable_results = censor_all_directories_in_list(displayable_results)
+
+    # Submit to the database
+    import sys
+    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    import requests
+    import os
+    SENT_STRING : str = '\n'.join(displayable_results)
+    USER_ID = get_user_id()
+    ENDPOINT = f'{os.getenv('SUBMISSIONS_ENDPOINT')}{USER_ID}'
+    user_submission = requests.get(ENDPOINT)
+    assert user_submission.status_code == 200, 'Cannot fetch user_submission'
+    new_submission = user_submission.json()
+    new_submission['evaluation'].append(SENT_STRING)
+    print(f'The new submission: {new_submission}')
+    response = requests.put(ENDPOINT, json=new_submission)
+    print(f'Sent to {ENDPOINT}: {response.status_code}\n{response}')
 else:
     import_failed = False
     print("JUDGE: Successfully found corresponding response.py!")

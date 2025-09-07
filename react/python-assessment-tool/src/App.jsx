@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router";
 import CodeForm from "./components/CodeForm";
+import EvaluationDisplay from "./components/EvaluationDisplay";
 import "./App.css";
 
 // importa.meta.env imports from an ".env.local" file, which is ignored by git.
@@ -9,6 +10,10 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const [loggedIn, setLoggedIn] = useState(true);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
+  const [answersAreViewable, setAnswerViewability] = useState(false);
+  const [evaluationIsViewable, setEvaluationViewability] = useState(false);
+  const [evaluationResults, setEvaluationResults] = useState("");
+
   const TOTAL_NUMBER_OF_QUESTIONS = Number.parseInt(
     import.meta.env.VITE_TOTAL_QUESTIONS
   );
@@ -17,8 +22,45 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const USER_NAME = getSessionUsername();
   const USER_ID = getSessionUserId();
 
+  // Array storing answers for each question
+  const arrOfAnswers = useRef(new Array(TOTAL_NUMBER_OF_QUESTIONS));
+
   // For navigation with React Router:
   let navigate = useNavigate();
+
+  const updateVisibilitySettings = () => {
+    // Fetch visibility information from the server,
+    // including if the user has already submitted their answers.
+    // If they have, setHasSubmitted(true).
+    fetch(import.meta.env.VITE_FLASK_EVAL_SET_VIEWABILITY + USER_ID)
+      .then((response) => response.json())
+      .then((visibilityInfo) => {
+        if (visibilityInfo["submitted"] === true) {
+          // User has made a submission
+          setHasSubmitted(true);
+        } else setHasSubmitted(false);
+        if (visibilityInfo["answers_viewable"] === true) {
+          // User can see their answers after submission, but cannot edit them
+          setAnswerViewability(true);
+        } else setAnswerViewability(false);
+        if (visibilityInfo["evaluation_viewable"] === true) {
+          // User can see how their answers are evaluated after submission
+          setEvaluationViewability(true);
+        } else setEvaluationViewability(false);
+      });
+  };
+
+  // Use this when elements are not loaded quickly enough
+  const checkIfElementIsLoaded = (elementId, callbackWhenElementLoaded) => {
+    const element = document.getElementById(elementId);
+    if (element === null)
+      setTimeout(
+        () => checkIfElementIsLoaded(elementId, callbackWhenElementLoaded),
+        100
+      );
+    // Check for every 100 ms
+    else callbackWhenElementLoaded();
+  };
 
   useEffect(() => {
     // Upon mount, if the user hasn't logged in, redirect to the LOGIN page
@@ -32,16 +74,23 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
     )
       navigate("/login");
     else {
-      // Fetch visibility information from the server,
-      // including if the user has already submitted their answers.
-      // If they have, setHasSubmitted(true).
-      fetch(import.meta.env.VITE_FLASK_EVAL_SET_VIEWABILITY + USER_ID)
-        .then((response) => response.json())
-        .then((visibilityInfo) => {
-          if (visibilityInfo["submitted"] === true) {
-            // User has made a submission
-            setHasSubmitted(true);
-          }
+      updateVisibilitySettings();
+    }
+
+    if (hasSubmitted) {
+      fetch(import.meta.env.VITE_FLASK_EVAL_RESULTS + USER_ID)
+        .then((response) => response.json()) //  Response is a dictionary with 1 key 'evaluation'. Get its value.
+        .then((json) => {
+          setEvaluationResults(json.evaluation);
+        });
+      fetch(import.meta.env.VITE_FLASK_EVAL_USERCODE + USER_ID)
+        .then((response) => response.json()) //  Response is a dictionary with 1 key 'submission'. Get its value.
+        .then((json) => {
+          arrOfAnswers.current = json.submission;
+          checkIfElementIsLoaded("code-input", () => {
+            document.getElementById("code-input").value =
+              arrOfAnswers.current[questionNumber];
+          });
         });
     }
 
@@ -49,9 +98,7 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
     return () => {
       console.log("The user hasn't logged in or has logged out.");
     };
-  }, []); // Empty dependency array ensures it runs only once on mount
-
-  const arrOfAnswers = useRef(new Array(TOTAL_NUMBER_OF_QUESTIONS)); // Array storing answers for each question
+  }, [hasSubmitted]); // Empty dependency array ensures it runs only once on mount
 
   const updateCurrentAnswer = () => {
     const copy = arrOfAnswers.current.slice();
@@ -86,7 +133,9 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
 
     fetch(import.meta.env.VITE_FLASK_EVAL_SUBMIT + USER_ID, requestOptions)
       .then((response) => response.json())
-      .then((json) => console.log(json));
+      .then((json) => {
+        updateVisibilitySettings();
+      });
     // Submit to USER_ID, which must be added to the database after registration.
   };
 
@@ -96,12 +145,16 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
       "The passed argument for boolean in submitButtonMethod is not a boolean"
     );
     if (boolean === true || boolean === false) {
-      if (boolean === true) {
-        submitAnswers();
-        // clearLoginSession(); // Passed as an argument from main.jsx
-        // navigate("/login");
-      }
-      setHasSubmitted(boolean);
+      // Ignore the argument, fix later.
+      //if (boolean === true) {
+      //  submitAnswers();
+      //  // clearLoginSession(); // Passed as an argument from main.jsx
+      //  // navigate("/login");
+      //}
+      submitAnswers();
+      document.getElementById("code-submit").disabled = true;
+      document.getElementById("code-submit").innerText = "Loading...";
+      setTimeout(() => setHasSubmitted(true), 2000); // Wait for 2s
     }
   };
 
@@ -164,15 +217,23 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
         </h2>
       ) : null}
 
-      {loggedIn && !hasSubmitted ? (
-        <CodeForm submitButtonMethod={submitButtonMethod} />
+      {loggedIn && (!hasSubmitted || (hasSubmitted && answersAreViewable)) ? (
+        <CodeForm
+          submitButtonMethod={submitButtonMethod}
+          editable={!hasSubmitted}
+        />
       ) : loggedIn && hasSubmitted ? (
         <p>Your code has now been finalized and rendered uneditable.</p>
       ) : (
         <p>You must log into your account first to access the form.</p>
       )}
-
-      {!hasSubmitted && loggedIn ? (
+      {hasSubmitted && evaluationIsViewable ? (
+        <EvaluationDisplay
+          text={evaluationResults}
+          questionNumber={questionNumber}
+        />
+      ) : null}
+      {loggedIn && (!hasSubmitted || (hasSubmitted && answersAreViewable)) ? (
         <div>
           <button
             type="button"

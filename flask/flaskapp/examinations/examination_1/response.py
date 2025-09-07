@@ -1,2 +1,1 @@
-# ID: 2472
-
+# Insert code to be examined by judge.py in the same directory.

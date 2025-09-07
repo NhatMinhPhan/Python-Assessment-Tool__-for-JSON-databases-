@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
-export default function CodeForm({ submitButtonMethod }) {
+export default function CodeForm({ submitButtonMethod, editable }) {
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const codeTextArea = useRef(null);
+
+  useEffect(() => {
+    if (editable === true) {
+      codeTextArea.current.disabled = false;
+    } else codeTextArea.current.disabled = true;
+  });
 
   const finalizedSubmit = () => {
     if (showConfirmation) submitButtonMethod(true);
@@ -15,21 +22,33 @@ export default function CodeForm({ submitButtonMethod }) {
 
   return (
     <form>
-      <label htmlFor="code-input">Copy and paste your Python code below:</label>
-      <br></br>
-      <textarea name="code" id="code-input"></textarea>
-      <br></br>
-      <button type="button" id="code-submit" onClick={() => finalizedSubmit()}>
-        Finalize and Submit All
-      </button>
-      <br></br>
-      <label htmlFor="code-submit">
-        {!showConfirmation ? (
-          "You will not be able to edit your code after submission."
-        ) : (
-          <b>Ready to submit everything? Click again to confirm.</b>
-        )}
+      <label htmlFor="code-input">
+        {editable === true
+          ? "Copy and paste your Python code below:"
+          : "Your code has already been submitted. You cannot make any further changes."}
       </label>
+      <br></br>
+      <textarea name="code" id="code-input" ref={codeTextArea}></textarea>
+      {editable === true ? (
+        <div>
+          <br></br>
+          <button
+            type="button"
+            id="code-submit"
+            onClick={() => finalizedSubmit()}
+          >
+            Finalize and Submit All
+          </button>
+          <br></br>
+          <label htmlFor="code-submit">
+            {!showConfirmation ? (
+              "You will not be able to edit your code after submission."
+            ) : (
+              <b>Ready to submit everything? Click again to confirm.</b>
+            )}
+          </label>
+        </div>
+      ) : null}
     </form>
   );
 }
