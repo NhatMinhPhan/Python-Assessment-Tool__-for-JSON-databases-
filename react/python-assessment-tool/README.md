@@ -6,11 +6,20 @@ This tool aims to aid tutors in assessing their tutees' Python knowledge and ski
 
 For this iteration of the tool, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, one will need at least 3 servers to operate the whole program. Then, according to the plan for the development of this tool, they would need to generate a Localhost tunnel, with [pinggy.io](https://pinggy.io/) for example, to connect with the tutees.
 
+## Requirements
+
+Besides React, Flask and the latter's accompanying packages, to properly use this tool, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://www.npmjs.com/package/json-server).
+
+- `json-server`: Installed with [npm](https://www.npmjs.com/package/json-server). This package is used to set up a JSON server for the JSON database, `db.json`.
+- `flask-cors`: Installed with [pip](https://pypi.org/project/flask-cors/). This package is a Flask extension for handling Cross Origin Resource Sharing (CORS).
+- `python-dotenv`: Installed with [pip](https://pypi.org/project/python-dotenv/). This package helps set key-value pairs in a `.env` file as environmental variables.
+- `requests`: Installed with [pip](https://pypi.org/project/requests/). This package is used to handle and send HTTP requests.
+
 ## JSON Server & Database
 
 ### Summary
 
-Create a `db.json` file in a folder called `instance` in the `flask` directory (in other words, `flask/instance/`) and follow this [link](https://www.npmjs.com/package/json-server) to install the json-server package.
+Create a `db.json` file in a folder called `instance` in the `flask` directory (in other words, `flask/instance/`).
 
 Subsequently, enter the following command into the terminal: `json-server db.json`, if your current working directory is `flask/instance/`. Otherwise, modify the command according to whatever directory which you are working with.
 
