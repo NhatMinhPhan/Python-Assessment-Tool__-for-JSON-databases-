@@ -1,4 +1,4 @@
-This work-in-progress is created for experiential purposes and not for professional use.
+This program is created for experiential purposes and not for professional use.
 
 # Python Assessment Tool
 
