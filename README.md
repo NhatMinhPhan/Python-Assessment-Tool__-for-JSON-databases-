@@ -86,7 +86,7 @@ The `.env` file _(the latter of the aforementioned .env files)_ must include the
 `ACCOUNTS_ENDPOINT`: JSON server endpoint that stores users' credentials\
 `LOGIN_REQUIRED_ENDPOINT`: Link to the **login page** of the React app (frontend)\
 `ADMINDATA_ENDPOINT`: JSON server endpoint that stores admininstrative data, **specifically** visibility settings of certain frontend components\
-`CENSORED_DIRECTORY_SECTION`: The text needed to censor out when displayed on the frontend (specifically the beginning of the directory, which sees), which is then replaced with an ellipsis (...)
+`CENSORED_DIRECTORY_SECTION`: The text needed to censor out when displayed on the frontend (specifically the beginning of the directory, which sees), which is then replaced with an ellipsis (...)\
 `FLASKAPP_CONTENT_DIRECTORY`: The directory (**absolute** path) where the entire content of `flaskapp` is found (e.g. `flask/flaskapp`)\
 `VENV_LIB_DIRECTORY`: The directory (**absolute** path) where the libraries and packages are found in the **virtual environment** (_venv_)
 
