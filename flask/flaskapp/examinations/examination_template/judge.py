@@ -1,5 +1,7 @@
 from typing import Union, List
 
+import os
+
 # In each 'examination_<number>' folder, there are only 2 files: judge.py & response.py.
 # Find respective 'response.py' in this 'examination' folder
 
@@ -210,7 +212,7 @@ except SyntaxError as e:
 
     # Submit to the database
     import sys
-    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    sys.path.append(os.getenv('VENV_LIB_DIRECTORY'))
     import requests
     import os
     SENT_STRING : str = '\n'.join(displayable_results)
@@ -240,7 +242,7 @@ except ModuleNotFoundError as e:
 
     # Submit to the database
     import sys
-    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    sys.path.append(os.getenv('VENV_LIB_DIRECTORY'))
     import requests
     import os
     SENT_STRING : str = '\n'.join(displayable_results)
@@ -269,7 +271,7 @@ except Exception as e:
 
     # Submit to the database
     import sys
-    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    sys.path.append(os.getenv('VENV_LIB_DIRECTORY'))
     import requests
     import os
     SENT_STRING : str = '\n'.join(displayable_results)
@@ -288,5 +290,5 @@ else:
     print('_______________________________________\nTEST CASES:')
     displayable_results.append('TEST CASES:')
     import sys
-    sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/venv/Lib/site-packages')
+    sys.path.append(os.getenv('VENV_LIB_DIRECTORY'))
     run()

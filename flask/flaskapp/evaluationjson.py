@@ -13,7 +13,7 @@ import requests
 import os
 
 import sys
-sys.path.append('C:/Users/nhatm/programming projs/FlaskPythonAssessment/flask/flaskapp')
+sys.path.append(os.getenv('FLASKAPP_CONTENT_DIRECTORY'))
 from authjson import cors_required_headers
 
 def put_into_database(answer_list: list, endpoint: str):

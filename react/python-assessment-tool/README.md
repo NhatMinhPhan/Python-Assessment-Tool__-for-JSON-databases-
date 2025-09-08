@@ -8,7 +8,7 @@ For this iteration of the tool, it is used as follows: The tutor sets up a JSON 
 
 ## Requirements
 
-Besides React, Flask and the latter's accompanying packages, to properly use this tool, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://www.npmjs.com/package/json-server).
+Besides React, Flask and the latter's accompanying packages, to properly use this tool, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://www.npmjs.com/package/json-server). A **virtual environment** (_venv_) must be created and set up to run this program.
 
 - `json-server`: Installed with [npm](https://www.npmjs.com/package/json-server). This package is used to set up a JSON server for the JSON database, `db.json`.
 - `flask-cors`: Installed with [pip](https://pypi.org/project/flask-cors/). This package is a Flask extension for handling Cross Origin Resource Sharing (CORS).
@@ -87,6 +87,19 @@ The `.env` file _(the latter of the aforementioned .env files)_ must include the
 `LOGIN_REQUIRED_ENDPOINT`: Link to the **login page** of the React app (frontend)\
 `ADMINDATA_ENDPOINT`: JSON server endpoint that stores admininstrative data, **specifically** visibility settings of certain frontend components\
 `CENSORED_DIRECTORY_SECTION`: The text needed to censor out when displayed on the frontend (specifically the beginning of the directory, which sees), which is then replaced with an ellipsis (...)
+`FLASKAPP_CONTENT_DIRECTORY`: The directory (**absolute** path) where the entire content of `flaskapp` is found (e.g. `flask/flaskapp`)\
+`VENV_LIB_DIRECTORY`: The directory (**absolute** path) where the libraries and packages are found in the **virtual environment** (_venv_)
+
+## Assessment Setup
+
+1. Set up your .env files: Refer to the _env files_ section for instructions on setting up the .env files. Especially, you must set `VITE_TOTAL_QUESTIONS` in the `.env.local` for the Flask code to the number of questions which will be asked to tutees.
+2. Using the `examination_template` folder in `flask/flaskapp/examinations`, make copies of the folder inside that directory (`flask/flaskapp/examinations`) and name them `examination_<number>` from `0` to `VITE_TOTAL_QUESTIONS` above. As an example, `examination_0` and `examination_1` have been created and appear in `flask/flaskapp/examinations`.\
+   Each `examination_<number>` folder will assess Question `<number + 1>` on the frontend. For instance, `examination_0` assesses Question 1, `examination_1` evaluates Question 2, and so on.
+3. Modify the test cases according to the tutor's questions and needs. Use the `test_case_output` decorator to evaluate outputs of the tutee's Python functions, and use `test_case_exception` if the tutee's functions are expected to raise an exception/error.
+
+Refer to the `plain_pyscripts` folder to view examples of how test cases should be structured in `judge.py`. For more information, head to the _Additional Material: plain_pyscripts_ section.
+
+And finally, run the JSON server (mentioned above), and the two development servers and the Localhost tunnels below. You are now ready to begin the assessment!
 
 ## React Development Server
 
@@ -118,3 +131,10 @@ The .env files will presumably have to be adjusted according to the URLS of the 
 Within the `plain_pyscripts` folder are examples showing what kinds of code this program can evaluate. You may run the individual `judge.py` in the folders to experience how the tool processes these examples, or run the `__init__.py` if you prefer a more "indirect" approach.
 
 If you decide to use `__init__.py`, you can change the argument in the last line `run_judge('plain_pyscripts\\examination_collections')` to a directory of the example code of your choice. Specifically, swap `<examination-example>` in `run_judge('plain_pyscripts\\<examination-example>')` with the name of the directory of your chosen example code before you run the file.
+
+The following is a description of each `examination` folder in `plain_pyscripts`:
+
+- `examination_addints`: Assessing the method for computing the sum of a number of integers
+- `examination_classes`: Assessing the use of Python classes
+- `examination_collections`: Assessing the use of Python collections (namely lists and tuples)
+- `examination_template`: The customizable template of `examination_<number>`
