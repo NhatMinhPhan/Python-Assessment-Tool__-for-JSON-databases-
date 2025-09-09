@@ -4,24 +4,27 @@ This program is created for experiential purposes and not for professional use.
 
 This tool aims to aid tutors in assessing their tutees' Python knowledge and skills currently with a JSON server, and is expected to implement a SQLite server in the near future as a more secure way of storing data.
 
-For this iteration of the tool, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, one will need at least 3 servers to operate the whole program. Then, according to the plan for the development of this tool, they would need to generate a Localhost tunnel, with [pinggy.io](https://pinggy.io/) for example, to connect with the tutees.
+For this iteration of the program, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, at least 3 servers are needed to operate the whole program. Then, one is expected to generate two Localhost tunnels, with [pinggy.io](https://pinggy.io/) for example, for tutees to access the program.
 
 ## Requirements
 
-Besides React, Flask and the latter's accompanying packages, to properly use this tool, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://www.npmjs.com/package/json-server). A **virtual environment** (_venv_) must be created and set up to run this program.
+Besides React, Flask and the latter's accompanying packages, to properly use this program, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager).
 
+- `react-router`: Installed with [npm](https://reactrouter.com/start/declarative/installation). This framework makes routing possible for this program.
 - `json-server`: Installed with [npm](https://www.npmjs.com/package/json-server). This package is used to set up a JSON server for the JSON database, `db.json`.
 - `flask-cors`: Installed with [pip](https://pypi.org/project/flask-cors/). This package is a Flask extension for handling Cross Origin Resource Sharing (CORS).
 - `python-dotenv`: Installed with [pip](https://pypi.org/project/python-dotenv/). This package helps set key-value pairs in a `.env` file as environmental variables.
 - `requests`: Installed with [pip](https://pypi.org/project/requests/). This package is used to handle and send HTTP requests.
 
+In addition, a **virtual environment** (_venv_) must be created and activated to start 3 servers described below and run this program. Specifically, enter the following into the terminal: `python -m venv venv`. Next, run `venv/Scripts/activate` to activate the newly-created virtual environment. Once you finish, proceed to the instructions below.
+
 ## JSON Server & Database
 
 ### Summary
 
-Create a `db.json` file in a folder called `instance` in the `flask` directory (in other words, `flask/instance/`).
+Create a `db.json` file in a folder called `instance` in the `flask` directory (in other words, `flask/instance/`). Create the aforesaid `instance` folder if it does not exist yet.
 
-Subsequently, enter the following command into the terminal: `json-server db.json`, if your current working directory is `flask/instance/`. Otherwise, modify the command according to whatever directory which you are working with.
+Subsequently, enter the following command into the terminal: `json-server flask/instance/db.json` at the root directory of this project, or `json-server db.json` if your current working directory is `flask/instance/`. Otherwise, modify the command according to whatever directory which you are working with.
 
 **NOTE**: Even with encrypted data thanks to Flask and its accompanying packages and modules, users' credentials (usernames, passwords) are currently **not** stored securely and privately due to the manner of storage of the database used (JSON database). Operate with caution and care.
 
@@ -92,12 +95,16 @@ The `.env` file _(the latter of the aforementioned .env files)_ must include the
 
 ## Assessment Setup
 
-1. Set up your .env files: Refer to the _env files_ section for instructions on setting up the .env files. Especially, you must set `VITE_TOTAL_QUESTIONS` in the `.env.local` for the Flask code to the number of questions which will be asked to tutees.
-2. Using the `examination_template` folder in `flask/flaskapp/examinations`, make copies of the folder inside that directory (`flask/flaskapp/examinations`) and name them `examination_<number>` from `0` to `VITE_TOTAL_QUESTIONS` above. As an example, `examination_0` and `examination_1` have been created and appear in `flask/flaskapp/examinations`.\
+Once you have installed the packages and set up a virtual environment (venv) in the _Requirements_ section, alongside a `db.json` file in `flask/instance`, proceed to the following instructions:
+
+1. Set up your .env files: Refer to the _.env files_ section for instructions on setting up the .env files. Especially, you must set `VITE_TOTAL_QUESTIONS` in the `.env.local` for the Flask code to the number of questions which will be asked to tutees.
+2. Using the `examination_template` folder in `flask/flaskapp/examinations`, make copies of the folder inside that directory (`flask/flaskapp/examinations`) and name them `examination_<number>` from `0` to `VITE_TOTAL_QUESTIONS` above. As an example, `examination_0` and `examination_1` have been created and appear in `flask/flaskapp/examinations`.
+
    Each `examination_<number>` folder will assess Question `<number + 1>` on the frontend. For instance, `examination_0` assesses Question 1, `examination_1` evaluates Question 2, and so on.
+
 3. Modify the test cases according to the tutor's questions and needs. Use the `test_case_output` decorator to evaluate outputs of the tutee's Python functions, and use `test_case_exception` if the tutee's functions are expected to raise an exception/error.
 
-Refer to the `plain_pyscripts` folder to view examples of how test cases should be structured in `judge.py`. For more information, head to the _Additional Material: plain_pyscripts_ section.
+   Refer to the `plain_pyscripts` folder to view examples of how test cases should be structured in `judge.py`. For more information, head to the _Additional Material: plain_pyscripts_ section.
 
 And finally, run the JSON server (mentioned above), and the two development servers and the Localhost tunnels below. You are now ready to begin the assessment!
 
@@ -106,13 +113,13 @@ And finally, run the JSON server (mentioned above), and the two development serv
 This section only discusses Vite which is used to work on this project.
 For other tools like Vite, please refer to their documentation.
 
-Remember to install dependencies included by `package.json` in `react/python-assessment-tool`.
+Remember to install dependencies included by `package.json` in `react/python-assessment-tool`, using `npm install`, `yarn` or `yarn install`, as long as you are in `react/python-assessment-tool`
 
-To run the development server and launch Localhost, enter in the terminal: `yarn run dev` using Yarn or `npm run dev` using npm, while your working directory is `react/python-assessment-tool`.
+To run the development server and launch Localhost, enter in the terminal: `yarn run dev` using Yarn or `npm run dev` using npm, while you are in `react/python-assessment-tool`.
 
 ## Flask Development Server
 
-The Flask program used to operate the backend of this tool is structured around a Flask _"app factory"_. Therefore, to activate the program, at the parent current directory of this project, enter the following command in the terminal: `flask --app flask/flaskapp run --debug --no-reload`.
+The Flask program used to operate the backend of this tool is structured around a Flask _"app factory"_. Therefore, to activate the program, at the root directory of this project, enter the following command in the terminal: `flask --app flask/flaskapp run --debug --no-reload`.
 
 The reason for `--no-reload` in the command above is that the program heavily relies on file modification while evaluating the tutees' submitted Python code. Without it, the program's file modification will automatically reload the server, and inconveniently halt the evaluation process and affect other crucial processes between front- and backend for the program to run smoothly.
 
@@ -123,6 +130,14 @@ The content of this section has **not** yet been verified or tested, and thus it
 Tutors will need to generate **TWO** Localhost tunnel, with [pinggy.io](https://pinggy.io/) for instance, to connect with the tutees directly from localhost. One is for the React development server, and the other is for the Flask development server. The JSON server preferably **should not** have its own Localhost tunnel.
 
 The .env files will presumably have to be adjusted according to the URLS of the Localhost tunnels.
+
+## Click Commands for the JSON database
+
+While the JSON server is running, you can interact with the JSON database by entering Click commands into the terminal (separate from the one running the servers). At the root directory of this project, enter `flask --app flask/flaskapp <click-command>`, swapping `<click-command>` with the following commands currently supported by this program:
+
+- `db-new`: This command creates or overwrites the `db.json` file in `flask/instance`.
+- `db-clearallanswers`: This command clears all submission data of every user, including their submitted code, their evaluation results and their overall average score.
+- `db-resetall`: This command resets the entire JSON database managed by `flask/instance/db.json`, clearing all user data and credentials (usernames, passwords, submissions, etc.).
 
 ## Additional Material: _plain_pyscripts_
 
