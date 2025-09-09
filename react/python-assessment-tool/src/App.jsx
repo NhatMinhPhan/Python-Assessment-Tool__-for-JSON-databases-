@@ -161,24 +161,28 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
   const previousQuestion = () => {
     if (questionNumber <= 0) return;
 
-    updateCurrentAnswer();
-    if (arrOfAnswers.current[questionNumber - 1] === undefined)
-      document.getElementById("code-input").value = "";
-    else
-      document.getElementById("code-input").value =
-        arrOfAnswers.current[questionNumber - 1];
+    if (document.getElementById("code-input") !== null) {
+      updateCurrentAnswer();
+      if (arrOfAnswers.current[questionNumber - 1] === undefined)
+        document.getElementById("code-input").value = "";
+      else
+        document.getElementById("code-input").value =
+          arrOfAnswers.current[questionNumber - 1];
+    }
     setQuestionNumber(questionNumber - 1);
   };
 
   const nextQuestion = () => {
     if (questionNumber >= TOTAL_NUMBER_OF_QUESTIONS - 1) return;
 
-    updateCurrentAnswer();
-    if (arrOfAnswers.current[questionNumber + 1] === undefined)
-      document.getElementById("code-input").value = "";
-    else
-      document.getElementById("code-input").value =
-        arrOfAnswers.current[questionNumber + 1];
+    if (document.getElementById("code-input") !== null) {
+      updateCurrentAnswer();
+      if (arrOfAnswers.current[questionNumber + 1] === undefined)
+        document.getElementById("code-input").value = "";
+      else
+        document.getElementById("code-input").value =
+          arrOfAnswers.current[questionNumber + 1];
+    }
     setQuestionNumber(questionNumber + 1);
   };
 
@@ -211,7 +215,10 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
         </div>
       ) : null}
 
-      {!hasSubmitted && loggedIn ? (
+      {(!hasSubmitted ||
+        (hasSubmitted && answersAreViewable) ||
+        (hasSubmitted && evaluationIsViewable)) &&
+      loggedIn ? (
         <h2>
           Question {questionNumber + 1}/{TOTAL_NUMBER_OF_QUESTIONS}
         </h2>
@@ -233,7 +240,10 @@ function App({ getSessionUsername, getSessionUserId, clearLoginSession }) {
           questionNumber={questionNumber}
         />
       ) : null}
-      {loggedIn && (!hasSubmitted || (hasSubmitted && answersAreViewable)) ? (
+      {loggedIn &&
+      (!hasSubmitted ||
+        (hasSubmitted && answersAreViewable) ||
+        (hasSubmitted && evaluationIsViewable)) ? (
         <div>
           <button
             type="button"

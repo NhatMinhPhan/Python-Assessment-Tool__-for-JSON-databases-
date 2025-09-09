@@ -1,22 +1,22 @@
-This program is created for experiential purposes and not for professional use.
+This application is created for experiential purposes and not for professional use.
 
 # Python Assessment Tool
 
 This tool aims to aid tutors in assessing their tutees' Python knowledge and skills currently with a JSON server, and is expected to implement a SQLite server in the near future as a more secure way of storing data.
 
-For this iteration of the program, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, at least 3 servers are needed to operate the whole program. Then, one is expected to generate two Localhost tunnels, with [pinggy.io](https://pinggy.io/) for example, for tutees to access the program.
+For this iteration of the application, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, at least 3 servers are needed to operate the whole program. Then, one is expected to generate two Localhost tunnels, with [pinggy.io](https://pinggy.io/) for example, for tutees to access the application.
 
 ## Requirements
 
-Besides React, Flask and the latter's accompanying packages, to properly use this program, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager).
+Besides React, Flask and the latter's accompanying packages, to properly use this application, the following packages must be installed with [pip](https://pypi.org/project/pip/) and [npm](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager).
 
-- `react-router`: Installed with [npm](https://reactrouter.com/start/declarative/installation). This framework makes routing possible for this program.
+- `react-router`: Installed with [npm](https://reactrouter.com/start/declarative/installation). This framework makes routing possible for this application.
 - `json-server`: Installed with [npm](https://www.npmjs.com/package/json-server). This package is used to set up a JSON server for the JSON database, `db.json`.
 - `flask-cors`: Installed with [pip](https://pypi.org/project/flask-cors/). This package is a Flask extension for handling Cross Origin Resource Sharing (CORS).
 - `python-dotenv`: Installed with [pip](https://pypi.org/project/python-dotenv/). This package helps set key-value pairs in a `.env` file as environmental variables.
 - `requests`: Installed with [pip](https://pypi.org/project/requests/). This package is used to handle and send HTTP requests.
 
-In addition, a **virtual environment** (_venv_) must be created and activated to start 3 servers described below and run this program. Specifically, enter the following into the terminal: `python -m venv venv`. Next, run `venv/Scripts/activate` to activate the newly-created virtual environment. Once you finish, proceed to the instructions below.
+In addition, a **virtual environment** (_venv_) must be created and activated to start 3 servers described below and run this application. Specifically, enter the following in the terminal: `python -m venv venv`. Next, run `venv/Scripts/activate` to activate the newly-created virtual environment. Once you finish, proceed to the instructions below.
 
 ## JSON Server & Database
 
@@ -24,7 +24,7 @@ In addition, a **virtual environment** (_venv_) must be created and activated to
 
 Create a `db.json` file in a folder called `instance` in the `flask` directory (in other words, `flask/instance/`). Create the aforesaid `instance` folder if it does not exist yet.
 
-Subsequently, enter the following command into the terminal: `json-server flask/instance/db.json` at the root directory of this project, or `json-server db.json` if your current working directory is `flask/instance/`. Otherwise, modify the command according to whatever directory which you are working with.
+Subsequently, enter the following command in the terminal: `json-server flask/instance/db.json` at the root directory of this project, or `json-server db.json` if your current working directory is `flask/instance/`. Otherwise, modify the command according to whatever directory which you are working with.
 
 **NOTE**: Even with encrypted data thanks to Flask and its accompanying packages and modules, users' credentials (usernames, passwords) are currently **not** stored securely and privately due to the manner of storage of the database used (JSON database). Operate with caution and care.
 
@@ -49,7 +49,7 @@ Copy and paste the following block into db.json.
 #### Admin data (`"admin-data"`)
 
 `"answers_viewable"`: `true` if the administrator/tutor allows tutees to view their submitted code (which they cannot edit), `false` to disable the visibility of the submitted code\
-`"evaluation_viewable'`: `true` if the administrator/tutor allows tutees to view the results of the program's evaluation of their code, `false` to disable the visibility of the evaluation results
+`"evaluation_viewable'`: `true` if the administrator/tutor allows tutees to view the results of the application's evaluation of their code, `false` to disable the visibility of the evaluation results
 
 Note that the `"id"` in `"admin-data"` has no practical and considerable use or significance in the operations of this assessment tool, so it can be other than `"1025"`. However, it **should** not be removed, as it potentially allows the block containing `"answers_viewable"` and `"evaluation_viewable"` to be deemed as an item of the `"admin-data"` array.
 
@@ -97,8 +97,10 @@ The `.env` file _(the latter of the aforementioned .env files)_ must include the
 
 Once you have installed the packages and set up a virtual environment (venv) in the _Requirements_ section, alongside a `db.json` file in `flask/instance`, proceed to the following instructions:
 
-1. Set up your .env files: Refer to the _.env files_ section for instructions on setting up the .env files. Especially, you must set `VITE_TOTAL_QUESTIONS` in the `.env.local` for the Flask code to the number of questions which will be asked to tutees.
-2. Using the `examination_template` folder in `flask/flaskapp/examinations`, make copies of the folder inside that directory (`flask/flaskapp/examinations`) and name them `examination_<number>` from `0` to `VITE_TOTAL_QUESTIONS` above. As an example, `examination_0` and `examination_1` have been created and appear in `flask/flaskapp/examinations`.
+1. Set up your .env files: Refer to the _.env files_ section for instructions on setting up the .env files. Especially, you must set `VITE_TOTAL_QUESTIONS` in the `.env.local` file for the Flask code to the number of questions which will be asked to tutees.
+2. Using the `examination_template` folder in `flask/flaskapp/examinations`, make copies of the folder inside that directory (`flask/flaskapp/examinations`), including the files within it, and name them `examination_<number>`, swapping `number` with integers from `0` to `VITE_TOTAL_QUESTIONS - 1`. As an example, `examination_0` and `examination_1` have been created and appear in `flask/flaskapp/examinations`.
+
+   **Make sure** that the number of `examination_<number>` folders is equal to `VITE_TOTAL_QUESTIONS` in the `.env.local`. And remember to **number them** from `0` to `VITE_TOTAL_QUESTIONS - 1`, as stated prior.
 
    Each `examination_<number>` folder will assess Question `<number + 1>` on the frontend. For instance, `examination_0` assesses Question 1, `examination_1` evaluates Question 2, and so on.
 
@@ -119,9 +121,9 @@ To run the development server and launch Localhost, enter in the terminal: `yarn
 
 ## Flask Development Server
 
-The Flask program used to operate the backend of this tool is structured around a Flask _"app factory"_. Therefore, to activate the program, at the root directory of this project, enter the following command in the terminal: `flask --app flask/flaskapp run --debug --no-reload`.
+The Flask backend of this tool is structured around a Flask _"app factory"_. Therefore, to activate the application, at the root directory of this project, enter the following command in the terminal: `flask --app flask/flaskapp run --debug --no-reload`.
 
-The reason for `--no-reload` in the command above is that the program heavily relies on file modification while evaluating the tutees' submitted Python code. Without it, the program's file modification will automatically reload the server, and inconveniently halt the evaluation process and affect other crucial processes between front- and backend for the program to run smoothly.
+The reason for `--no-reload` in the command above is that the application heavily relies on file modification while evaluating the tutees' submitted Python code. Without it, the application's file modification will automatically reload the server, and inconveniently halt the evaluation process and affect other crucial processes between front- and backend for the program to run smoothly.
 
 ## Localhost Tunnel (yet to be tested)
 
@@ -133,7 +135,7 @@ The .env files will presumably have to be adjusted according to the URLS of the 
 
 ## Click Commands for the JSON database
 
-While the JSON server is running, you can interact with the JSON database by entering Click commands into the terminal (separate from the one running the servers). At the root directory of this project, enter `flask --app flask/flaskapp <click-command>`, swapping `<click-command>` with the following commands currently supported by this program:
+While the JSON server is running, you can interact with the JSON database by entering Click commands in the terminal (separate from the one running the servers). At the root directory of this project, enter `flask --app flask/flaskapp <click-command>`, swapping `<click-command>` with the following commands currently supported by this application:
 
 - `db-new`: This command creates or overwrites the `db.json` file in `flask/instance`.
 - `db-clearallanswers`: This command clears all submission data of every user, including their submitted code, their evaluation results and their overall average score.
@@ -143,7 +145,7 @@ While the JSON server is running, you can interact with the JSON database by ent
 
 `plain_pyscripts` refers to a folder containing material foundational to the `judge.py` files and their `examination_<number>` folders which evaluate the tutees' Python submissions. It is not at all involved in the operation of the assessment tool, but one may examine or use it to evaluate Python code independent of any frontend or database.
 
-Within the `plain_pyscripts` folder are examples showing what kinds of code this program can evaluate. You may run the individual `judge.py` in the folders to experience how the tool processes these examples, or run the `__init__.py` if you prefer a more "indirect" approach.
+Within the `plain_pyscripts` folder are examples showing what kinds of code this application can evaluate. You may run the individual `judge.py` in the folders to experience how the tool processes these examples, or run the `__init__.py` if you prefer a more "indirect" approach.
 
 If you decide to use `__init__.py`, you can change the argument in the last line `run_judge('plain_pyscripts\\examination_collections')` to a directory of the example code of your choice. Specifically, swap `<examination-example>` in `run_judge('plain_pyscripts\\<examination-example>')` with the name of the directory of your chosen example code before you run the file.
 
