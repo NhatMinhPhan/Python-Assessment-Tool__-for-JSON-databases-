@@ -2,7 +2,7 @@ This application is created for experiential purposes and not for professional u
 
 # Python Assessment Tool
 
-This tool aims to aid tutors in assessing their tutees' Python knowledge and skills currently with a JSON server, and is expected to implement a SQLite server in the near future as a more secure way of storing data.
+This tool aims to aid tutors in assessing their tutees' Python knowledge and skills currently with a JSON server, and is expected to implement a SQLite server in the near future as a more secure way of storing data. It consists of account registration and login features in the front end which stores each tutee's individual answers and results while securing their privacy from each other.
 
 For this iteration of the application, it is used as follows: The tutor sets up a JSON server with a .json file, 2 separate .env files for the front- and back-end, a development server or server of another type to run the React code, and another development server to run the Flask code. In total, at least 3 servers are needed to operate the whole program. Then, one is expected to generate two Localhost tunnels, with [pinggy.io](https://pinggy.io/) for example, for tutees to access the application.
 
@@ -133,13 +133,28 @@ Tutors will need to generate **TWO** Localhost tunnel, with [pinggy.io](https://
 
 The .env files will presumably have to be adjusted according to the URLS of the Localhost tunnels.
 
-## Click Commands for the JSON database
+## Click Commands for the JSON Database
 
 While the JSON server is running, you can interact with the JSON database by entering Click commands in the terminal (separate from the one running the servers). At the root directory of this project, enter `flask --app flask/flaskapp <click-command>`, swapping `<click-command>` with the following commands currently supported by this application:
 
 - `db-new`: This command creates or overwrites the `db.json` file in `flask/instance`.
 - `db-clearallanswers`: This command clears all submission data of every user, including their submitted code, their evaluation results and their overall average score.
 - `db-resetall`: This command resets the entire JSON database managed by `flask/instance/db.json`, clearing all user data and credentials (usernames, passwords, submissions, etc.).
+
+## Front-end / Instructions for Tutees
+
+On the site, the user (tutee) is first shown account login and registration pages. Once they have created an account and logged in it, they are now on the main page, where they have to copy and paste their Python code into the textbox for each question. They can navigate to the previous and next questions with the "Previous Question" and "Next Question" buttons. They can finalize their responses and turn them in by clicking on the "Finalize and Submit All" button. (**They will be reminded that they cannot make any further edits to their code, after they click on it for the first time.**)
+
+Depending on the `admin-data` settings in `db.json`, the user can either view their now uneditable responses and the corresponding evaluation of their work, which also consists of their overall average score.
+
+The user can log out of their account at any time.
+
+As for deleting their accounts, the user must contact the tutor/administrator so that the latter can manipulate the database stored in `db.json`.
+
+**NOTE:**
+
+- The user's progress will not be automatically saved, so their work on the website will not be recovered once the user logs out of their account.
+- The user must not refresh the webpage because they will automatically log out of their account as a result, and hence lose their progress.
 
 ## Additional Material: _plain_pyscripts_
 
